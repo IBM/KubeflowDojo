@@ -29,6 +29,12 @@ Note: if you are running `Docker Desktop` which may come with the option to star
   minikube start --driver=docker --memory=8192MB --cpus=6 --disk-size=30000mb --kubernetes-version=v1.15.6
   ```
 
+  Note:
+
+  1. if `minikube` version is older than `v1.8.0`, replace `--driver` with `--vm-driver`.
+  2. if you have to change the cpu resources for the cluster, make sure you have at least 4 cpus for the cluster. Also on MacOS, make sure that the cpu resource for your Docker Desktop has at least two more cpus. E.g. if the cpu resource in Docker Desktop is 6, then the `--cpus` for the above command should be changed to 4.
+  <p>
+
   - Access dashboard
 
   ```shell
@@ -69,7 +75,7 @@ Note: if you are running `Docker Desktop` which may come with the option to star
 cd $HOME
 mkdir kfdef
 cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.yaml
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_k8s_istio.yaml
 ```
 
 * Check the deployment
