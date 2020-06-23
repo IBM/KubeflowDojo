@@ -1,0 +1,123 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotation:
+    tekton.dev/input_artifacts: '{}'
+    tekton.dev/output_artifacts: '{}'
+  name: flip-coin-example-pipeline-run
+spec:
+  params:
+  - name: forced_result1
+    value: heads
+  - name: forced_result2
+    value: tails
+  pipelineSpec:
+    params:
+    - default: heads
+      name: forced_result1
+    - default: tails
+      name: forced_result2
+    tasks:
+    - name: flip
+      params:
+      - name: forced_result1
+        value: $(params.forced_result1)
+      taskSpec:
+        params:
+        - name: forced_result1
+        results:
+        - description: /tmp/output
+          name: output
+        steps:
+        - args:
+          - python -c "import random; import sys; forced_result = '$(inputs.params.forced_result1)';
+            result = 'heads' if random.randint(0,1) == 0 else 'tails'; print(forced_result)
+            if (forced_result == 'heads' or forced_result == 'tails') else print(result)"
+            | tee $(results.output.path)
+          command:
+          - sh
+          - -c
+          image: python:alpine3.6
+          name: main
+    - conditions:
+      - conditionRef: super-condition
+        params:
+        - name: operand1
+          value: $(tasks.flip.results.output)
+        - name: operand2
+          value: heads
+        - name: operator
+          value: ==
+      name: flip-again
+      params:
+      - name: forced_result2
+        value: $(params.forced_result2)
+      taskSpec:
+        params:
+        - name: forced_result2
+        results:
+        - description: /tmp/output
+          name: output
+        steps:
+        - args:
+          - python -c "import random; import sys; forced_result = '$(inputs.params.forced_result2)';
+            result = 'heads' if random.randint(0,1) == 0 else 'tails'; print(forced_result)
+            if (forced_result == 'heads' or forced_result == 'tails') else print(result)"
+            | tee $(results.output.path)
+          command:
+          - sh
+          - -c
+          image: python:alpine3.6
+          name: main
+    - conditions:
+      - conditionRef: super-condition
+        params:
+        - name: operand1
+          value: $(tasks.flip-again.results.output)
+        - name: operand2
+          value: tails
+        - name: operator
+          value: ==
+      - conditionRef: super-condition
+        params:
+        - name: operand1
+          value: $(tasks.flip.results.output)
+        - name: operand2
+          value: heads
+        - name: operator
+          value: ==
+      name: print1
+      params:
+      - name: flip-again-output
+        value: $(tasks.flip-again.results.output)
+      taskSpec:
+        params:
+        - name: flip-again-output
+        steps:
+        - command:
+          - echo
+          - $(inputs.params.flip-again-output)
+          image: alpine:3.6
+          name: main
+    - conditions:
+      - conditionRef: super-condition
+        params:
+        - name: operand1
+          value: $(tasks.flip.results.output)
+        - name: operand2
+          value: tails
+        - name: operator
+          value: ==
+      name: print2
+      params:
+      - name: flip-output
+        value: $(tasks.flip.results.output)
+      taskSpec:
+        params:
+        - name: flip-output
+        steps:
+        - command:
+          - echo
+          - $(inputs.params.flip-output)
+          image: alpine:3.6
+          name: main

@@ -1,0 +1,432 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    tekton.dev/input_artifacts: '{"convert-mnist-experiment-result": [{"name": "kubeflow-launch-experiment-best_parameter_set",
+      "parent_task": "kubeflow-launch-experiment"}], "train": [{"name": "convert-mnist-experiment-result-output",
+      "parent_task": "convert-mnist-experiment-result"}, {"name": "modelpvc-name",
+      "parent_task": "modelpvc"}], "inference": [{"name": "modelpvc-name", "parent_task":
+      "modelpvc"}]}'
+    tekton.dev/output_artifacts: '{"kubeflow-launch-experiment": [{"name": "kubeflow-launch-experiment-best_parameter_set",
+      "path": "/tmp/outputs/Best_Parameter_Set/data"}], "convert-mnist-experiment-result":
+      [{"name": "convert-mnist-experiment-result-output", "path": "/tmp/outputs/Output/data"}]}'
+    sidecar.istio.io/inject: "false"
+  name: end-to-end-pipeline-run
+spec:
+  params:
+  - name: name
+    value: mnist-demo
+  - name: namespace
+    value: kubeflow
+  - name: step
+    value: '4000'
+  pipelineSpec:
+    params:
+    - default: mnist-demo
+      name: name
+    - default: kubeflow
+      name: namespace
+    - default: '4000'
+      name: step
+    tasks:
+    - name: kubeflow-launch-experiment
+      params:
+      - name: name
+        value: $(params.name)
+      - name: namespace
+        value: $(params.namespace)
+      taskSpec:
+        params:
+        - name: name
+        - name: namespace
+        results:
+        - description: /tmp/outputs/Best_Parameter_Set/data
+          name: best-parameter-set
+        steps:
+        - args:
+          - --name
+          - $(inputs.params.name)
+          - --namespace
+          - $(inputs.params.namespace)
+          - --version
+          - v1alpha3
+          - --maxTrialCount
+          - '12'
+          - --maxFailedTrialCount
+          - '3'
+          - --parallelTrialCount
+          - '3'
+          - --objectiveConfig
+          - '{''type'': ''minimize'', ''goal'': 0.001, ''objectiveMetricName'': ''loss''}'
+          - --algorithmConfig
+          - '{''algorithmName'': ''random''}'
+          - --trialTemplate
+          - '{''goTemplate'': {''rawTemplate'': ''{"apiVersion": "kubeflow.org/v1", "kind":
+            "TFJob", "metadata": {"name": "{{.Trial}}", "namespace": "{{.NameSpace}}"},
+            "spec": {"tfReplicaSpecs": {"Chief": {"replicas": 1, "restartPolicy": "OnFailure",
+            "template": {"spec": {"containers": [{"command": ["sh", "-c"], "args": ["python
+            /opt/model.py --tf-train-steps=2000 {{- with .HyperParameters}} {{- range .}}
+            {{.Name}}={{.Value}} {{- end}} {{- end}}"], "image": "liuhougangxa/tf-estimator-mnist",
+            "name": "tensorflow"}]}}}, "Worker": {"replicas": 3, "restartPolicy": "OnFailure",
+            "template": {"spec": {"containers": [{"command": ["sh", "-c"], "args": ["python
+            /opt/model.py --tf-train-steps=2000 {{- with .HyperParameters}} {{- range .}}
+            {{.Name}}={{.Value}} {{- end}} {{- end}}"], "image": "liuhougangxa/tf-estimator-mnist",
+            "name": "tensorflow"}]}}}}}}''}}'
+          - --parameters
+          - '[{''name'': ''--tf-learning-rate'', ''parameterType'': ''double'', ''feasibleSpace'':
+            {''min'': ''0.01'', ''max'': ''0.03''}}, {''name'': ''--tf-batch-size'', ''parameterType'':
+            ''discrete'', ''feasibleSpace'': {''list'': [''16'', ''32'', ''64'']}}]'
+          - --metricsCollector
+          - '{''source'': {''fileSystemPath'': {''path'': ''/tmp/tf'', ''kind'': ''Directory''}},
+            ''collector'': {''kind'': ''TensorFlowEvent''}}'
+          - --experimentTimeoutMinutes
+          - '1440'
+          - --deleteAfterDone
+          - 'False'
+          - --outputFile
+          - $(results.best-parameter-set.path)
+          command:
+          - python
+          - /ml/launch_experiment.py
+          image: liuhougangxa/katib-experiment-launcher:latest
+          name: main
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf best_parameter_set.tgz $(results.best-parameter-set.path)
+
+            mc cp best_parameter_set.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/best_parameter_set.tgz
+
+            '
+    - name: convert-mnist-experiment-result
+      params:
+      - name: kubeflow-launch-experiment-best_parameter_set
+        value: $(tasks.kubeflow-launch-experiment.results.best-parameter-set)
+      taskSpec:
+        params:
+        - name: kubeflow-launch-experiment-best_parameter_set
+        results:
+        - description: /tmp/outputs/Output/data
+          name: output
+        steps:
+        - args:
+          - --experiment-result
+          - $(inputs.params.kubeflow-launch-experiment-best_parameter_set)
+          - '----output-paths'
+          - $(results.output.path)
+          command:
+          - python3
+          - -u
+          - -c
+          - "def convert_mnist_experiment_result(experiment_result)  :\n    import json\n\
+            \    r = json.loads(experiment_result)\n    args = []\n    for hp in r:\n  \
+            \      print(hp)\n        args.append(\"%s=%s\" % (hp[\"name\"], hp[\"value\"\
+            ]))\n\n    return \" \".join(args)\n\ndef _serialize_str(str_value: str) ->\
+            \ str:\n    if not isinstance(str_value, str):\n        raise TypeError('Value\
+            \ \"{}\" has type \"{}\" instead of str.'.format(str(str_value), str(type(str_value))))\n\
+            \    return str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Convert\
+            \ mnist experiment result', description='')\n_parser.add_argument(\"--experiment-result\"\
+            , dest=\"experiment_result\", type=str, required=True, default=argparse.SUPPRESS)\n\
+            _parser.add_argument(\"----output-paths\", dest=\"_output_paths\", type=str,\
+            \ nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+            _output_paths\", [])\n\n_outputs = convert_mnist_experiment_result(**_parsed_args)\n\
+            \n_outputs = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n\
+            ]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n    try:\n\
+            \        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n  \
+            \      pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"
+          image: tensorflow/tensorflow:1.13.2-py3
+          name: main
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf output.tgz $(results.output.path)
+
+            mc cp output.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/output.tgz
+
+            '
+    - name: modelpvc
+      params:
+      - name: action
+        value: create
+      - name: namespace
+        value: $(params.namespace)
+      - name: output
+        value: "- name: manifest\n  valueFrom: '{}'\n- name: name\n  valueFrom: '{.metadata.name}'\n\
+          - name: size\n  valueFrom: '{.status.capacity.storage}'\n"
+      - name: set-ownerreference
+        value: 'false'
+      taskSpec:
+        params:
+        - description: Action on the resource
+          name: action
+          type: string
+        - default: strategic
+          description: Merge strategy when using action patch
+          name: merge-strategy
+          type: string
+        - default: ''
+          description: An express to retrieval data from resource.
+          name: output
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is success.
+          name: success-condition
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is failure.
+          name: failure-condition
+          type: string
+        - default: index.docker.io/aipipeline/kubeclient:v0.0.2
+          description: Kubectl wrapper image
+          name: image
+          type: string
+        - default: 'false'
+          description: Enable set owner reference for created resource.
+          name: set-ownerreference
+          type: string
+        - name: namespace
+        results:
+        - description: '{}'
+          name: manifest
+        - description: '{.metadata.name}'
+          name: name
+        - description: '{.status.capacity.storage}'
+          name: size
+        steps:
+        - args:
+          - --action=$(params.action)
+          - --merge-strategy=$(params.merge-strategy)
+          - "--manifest=apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name:\
+            \ $(PIPELINERUN)-modelpvc\n  namespace: $(params.namespace)\nspec:\n  accessModes:\n  - ReadWriteMany\n  resources:\n\
+            \    requests:\n      storage: 1Gi\n"
+          - --output=$(params.output)
+          - --success-condition=$(params.success-condition)
+          - --failure-condition=$(params.failure-condition)
+          - --set-ownerreference=$(params.set-ownerreference)
+          env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          image: $(params.image)
+          name: main
+          resources: {}
+    - name: train
+      params:
+      - name: action
+        value: create
+      - name: output
+        value: "- name: manifest\n  valueFrom: '{}'\n- name: name\n  valueFrom: '{.metadata.name}'\n"
+      - name: success-condition
+        value: status.replicaStatuses.Worker.succeeded==3,status.replicaStatuses.Chief.succeeded==1
+      - name: set-ownerreference
+        value: 'false'
+      - name: convert-mnist-experiment-result-output
+        value: $(tasks.convert-mnist-experiment-result.results.output)
+      - name: modelpvc-name
+        value: $(tasks.modelpvc.results.name)
+      - name: name
+        value: $(params.name)
+      - name: namespace
+        value: $(params.namespace)
+      - name: step
+        value: $(params.step)
+      taskSpec:
+        params:
+        - description: Action on the resource
+          name: action
+          type: string
+        - default: strategic
+          description: Merge strategy when using action patch
+          name: merge-strategy
+          type: string
+        - default: ''
+          description: An express to retrieval data from resource.
+          name: output
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is success.
+          name: success-condition
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is failure.
+          name: failure-condition
+          type: string
+        - default: index.docker.io/aipipeline/kubeclient:v0.0.2
+          description: Kubectl wrapper image
+          name: image
+          type: string
+        - default: 'false'
+          description: Enable set owner reference for created resource.
+          name: set-ownerreference
+          type: string
+        - name: convert-mnist-experiment-result-output
+        - name: modelpvc-name
+        - name: name
+        - name: namespace
+        - name: step
+        results:
+        - description: '{}'
+          name: manifest
+        - description: '{.metadata.name}'
+          name: name
+        steps:
+        - args:
+          - --action=$(params.action)
+          - --merge-strategy=$(params.merge-strategy)
+          - "--manifest=apiVersion: kubeflow.org/v1\nkind: TFJob\nmetadata:\n  annotations:\n\
+            \    sidecar.istio.io/inject: 'false'\n  name: $(inputs.params.name)\n  namespace:\
+            \ $(inputs.params.namespace)\nspec:\n  tfReplicaSpecs:\n    Chief:\n      replicas:\
+            \ 1\n      restartPolicy: OnFailure\n      template:\n        metadata:\n  \
+            \        annotations:\n            sidecar.istio.io/inject: 'false'\n      \
+            \  spec:\n          containers:\n          - args:\n            - python /opt/model.py\
+            \ --tf-train-steps=$(inputs.params.step) --tf-export-dir=/mnt/export\n     \
+            \         $(inputs.params.convert-mnist-experiment-result-output)\n        \
+            \    command:\n            - sh\n            - -c\n            image: liuhougangxa/tf-estimator-mnist\n\
+            \            name: tensorflow\n            volumeMounts:\n            - mountPath:\
+            \ /mnt/export\n              name: export-model\n          volumes:\n      \
+            \    - name: export-model\n            persistentVolumeClaim:\n            \
+            \  claimName: $(inputs.params.modelpvc-name)\n    Worker:\n      replicas: 3\n\
+            \      restartPolicy: OnFailure\n      template:\n        metadata:\n      \
+            \    annotations:\n            sidecar.istio.io/inject: 'false'\n        spec:\n\
+            \          containers:\n          - args:\n            - python /opt/model.py\
+            \ --tf-train-steps=$(inputs.params.step) --tf-export-dir=/mnt/export\n     \
+            \         $(inputs.params.convert-mnist-experiment-result-output)\n        \
+            \    command:\n            - sh\n            - -c\n            image: liuhougangxa/tf-estimator-mnist\n\
+            \            name: tensorflow\n            volumeMounts:\n            - mountPath:\
+            \ /mnt/export\n              name: export-model\n          volumes:\n      \
+            \    - name: export-model\n            persistentVolumeClaim:\n            \
+            \  claimName: $(inputs.params.modelpvc-name)\n"
+          - --output=$(params.output)
+          - --success-condition=$(params.success-condition)
+          - --failure-condition=$(params.failure-condition)
+          - --set-ownerreference=$(params.set-ownerreference)
+          image: $(params.image)
+          name: main
+          resources: {}
+    - name: inference
+      params:
+      - name: action
+        value: create
+      - name: output
+        value: "- name: manifest\n  valueFrom: '{}'\n- name: name\n  valueFrom: '{.metadata.name}'\n"
+      - name: success-condition
+        value: status.url
+      - name: set-ownerreference
+        value: 'false'
+      - name: modelpvc-name
+        value: $(tasks.modelpvc.results.name)
+      - name: name
+        value: $(params.name)
+      - name: namespace
+        value: $(params.namespace)
+      runAfter:
+      - train
+      taskSpec:
+        params:
+        - description: Action on the resource
+          name: action
+          type: string
+        - default: strategic
+          description: Merge strategy when using action patch
+          name: merge-strategy
+          type: string
+        - default: ''
+          description: An express to retrieval data from resource.
+          name: output
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is success.
+          name: success-condition
+          type: string
+        - default: ''
+          description: A label selector express to decide if the action on resource is failure.
+          name: failure-condition
+          type: string
+        - default: index.docker.io/aipipeline/kubeclient:v0.0.2
+          description: Kubectl wrapper image
+          name: image
+          type: string
+        - default: 'false'
+          description: Enable set owner reference for created resource.
+          name: set-ownerreference
+          type: string
+        - name: modelpvc-name
+        - name: name
+        - name: namespace
+        results:
+        - description: '{}'
+          name: manifest
+        - description: '{.metadata.name}'
+          name: name
+        steps:
+        - args:
+          - --action=$(params.action)
+          - --merge-strategy=$(params.merge-strategy)
+          - "--manifest=apiVersion: serving.kubeflow.org/v1alpha2\nkind: InferenceService\n\
+            metadata:\n  name: $(inputs.params.name)\n  namespace: $(inputs.params.namespace)\n\
+            spec:\n  canary:\n    predictor:\n      minReplicas: 1\n      tensorflow:\n\
+            \        storageUri: pvc://$(inputs.params.modelpvc-name)/\n  canaryTrafficPercent:\
+            \ 10\n  default:\n    predictor:\n      minReplicas: 1\n      tensorflow:\n\
+            \        storageUri: pvc://$(inputs.params.modelpvc-name)/\n"
+          - --output=$(params.output)
+          - --success-condition=$(params.success-condition)
+          - --failure-condition=$(params.failure-condition)
+          - --set-ownerreference=$(params.set-ownerreference)
+          image: $(params.image)
+          name: main
+          resources: {}

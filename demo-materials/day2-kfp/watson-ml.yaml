@@ -1,0 +1,450 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    tekton.dev/input_artifacts: '{"train-model-watson-machine-learning": [{"name":
+      "create-secret-kubernetes-cluster-secret_name", "parent_task": "create-secret-kubernetes-cluster"}],
+      "store-model-watson-machine-learning": [{"name": "train-model-watson-machine-learning-run_uid",
+      "parent_task": "train-model-watson-machine-learning"}], "deploy-model-watson-machine-learning":
+      [{"name": "store-model-watson-machine-learning-model_uid", "parent_task": "store-model-watson-machine-learning"}]}'
+    tekton.dev/output_artifacts: '{"create-secret-kubernetes-cluster": [{"name": "create-secret-kubernetes-cluster-secret_name",
+      "path": "/tmp/outputs/secret_name/data"}], "train-model-watson-machine-learning":
+      [{"name": "train-model-watson-machine-learning-run_uid", "path": "/tmp/outputs/run_uid/data"},
+      {"name": "train-model-watson-machine-learning-training_uid", "path": "/tmp/outputs/training_uid/data"}],
+      "store-model-watson-machine-learning": [{"name": "store-model-watson-machine-learning-model_uid",
+      "path": "/tmp/outputs/model_uid/data"}], "deploy-model-watson-machine-learning":
+      [{"name": "deploy-model-watson-machine-learning-model_uid", "path": "/tmp/outputs/model_uid/data"},
+      {"name": "deploy-model-watson-machine-learning-scoring_endpoint", "path": "/tmp/outputs/scoring_endpoint/data"}]}'
+  name: kfp-on-wml-training-run
+spec:
+  params:
+  - name: GITHUB_TOKEN
+    value: ''
+  - name: CONFIG_FILE_URL
+    value: https://raw.githubusercontent.com/user/repository/branch/creds.ini
+  - name: train_code
+    value: tf-model.zip
+  - name: execution_command
+    value: '''python3 convolutional_network.py --trainImagesFile ${DATA_DIR}/train-images-idx3-ubyte.gz
+      --trainLabelsFile ${DATA_DIR}/train-labels-idx1-ubyte.gz --testImagesFile ${DATA_DIR}/t10k-images-idx3-ubyte.gz
+      --testLabelsFile ${DATA_DIR}/t10k-labels-idx1-ubyte.gz --learningRate 0.001
+      --trainingIters 20000'''
+  - name: framework
+    value: tensorflow
+  - name: framework_version
+    value: '1.15'
+  - name: runtime
+    value: python
+  - name: runtime_version
+    value: '3.6'
+  - name: run_definition
+    value: wml-tensorflow-definition
+  - name: run_name
+    value: wml-tensorflow-run
+  - name: model_name
+    value: wml-tensorflow-mnist
+  - name: scoring_payload
+    value: tf-mnist-test-payload.json
+  - name: compute_name
+    value: k80
+  - name: compute_nodes
+    value: '1'
+  pipelineSpec:
+    params:
+    - default: ''
+      name: GITHUB_TOKEN
+    - default: https://raw.githubusercontent.com/user/repository/branch/creds.ini
+      name: CONFIG_FILE_URL
+    - default: tf-model.zip
+      name: train_code
+    - default: '''python3 convolutional_network.py --trainImagesFile ${DATA_DIR}/train-images-idx3-ubyte.gz
+        --trainLabelsFile ${DATA_DIR}/train-labels-idx1-ubyte.gz --testImagesFile ${DATA_DIR}/t10k-images-idx3-ubyte.gz
+        --testLabelsFile ${DATA_DIR}/t10k-labels-idx1-ubyte.gz --learningRate 0.001
+        --trainingIters 20000'''
+      name: execution_command
+    - default: tensorflow
+      name: framework
+    - default: '1.15'
+      name: framework_version
+    - default: python
+      name: runtime
+    - default: '3.6'
+      name: runtime_version
+    - default: wml-tensorflow-definition
+      name: run_definition
+    - default: wml-tensorflow-run
+      name: run_name
+    - default: wml-tensorflow-mnist
+      name: model_name
+    - default: tf-mnist-test-payload.json
+      name: scoring_payload
+    - default: k80
+      name: compute_name
+    - default: '1'
+      name: compute_nodes
+    tasks:
+    - name: create-secret-kubernetes-cluster
+      params:
+      - name: CONFIG_FILE_URL
+        value: $(params.CONFIG_FILE_URL)
+      - name: GITHUB_TOKEN
+        value: $(params.GITHUB_TOKEN)
+      taskSpec:
+        params:
+        - name: CONFIG_FILE_URL
+        - name: GITHUB_TOKEN
+        results:
+        - description: /tmp/outputs/secret_name/data
+          name: secret-name
+        stepTemplate:
+          volumeMounts:
+          - mountPath: /tmp/outputs/secret_name
+            name: create-secret-kubernetes-cluster-secret-name
+        steps:
+        - args:
+          - /app/config.py
+          - --token
+          - $(inputs.params.GITHUB_TOKEN)
+          - --url
+          - $(inputs.params.CONFIG_FILE_URL)
+          - --name
+          - kfp-creds
+          - --output-secret-name-file
+          - $(results.secret-name.path)
+          command:
+          - python3
+          image: docker.io/aipipeline/wml-config:latest
+          name: main
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf secret_name.tgz $(results.secret-name.path)
+
+            mc cp secret_name.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/secret_name.tgz
+
+            '
+        volumes:
+        - emptyDir: {}
+          name: create-secret-kubernetes-cluster-secret-name
+    - name: train-model-watson-machine-learning
+      params:
+      - name: compute_name
+        value: $(params.compute_name)
+      - name: compute_nodes
+        value: $(params.compute_nodes)
+      - name: create-secret-kubernetes-cluster-secret_name
+        value: $(tasks.create-secret-kubernetes-cluster.results.secret-name)
+      - name: execution_command
+        value: $(params.execution_command)
+      - name: framework
+        value: $(params.framework)
+      - name: framework_version
+        value: $(params.framework_version)
+      - name: run_definition
+        value: $(params.run_definition)
+      - name: run_name
+        value: $(params.run_name)
+      - name: runtime
+        value: $(params.runtime)
+      - name: runtime_version
+        value: $(params.runtime_version)
+      - name: train_code
+        value: $(params.train_code)
+      taskSpec:
+        params:
+        - name: compute_name
+        - name: compute_nodes
+        - name: create-secret-kubernetes-cluster-secret_name
+        - name: execution_command
+        - name: framework
+        - name: framework_version
+        - name: run_definition
+        - name: run_name
+        - name: runtime
+        - name: runtime_version
+        - name: train_code
+        results:
+        - description: /tmp/outputs/run_uid/data
+          name: run-uid
+        - description: /tmp/outputs/training_uid/data
+          name: training-uid
+        steps:
+        - args:
+          - -u
+          - /app/wml-train.py
+          - --config
+          - $(inputs.params.create-secret-kubernetes-cluster-secret_name)
+          - --train-code
+          - $(inputs.params.train_code)
+          - --execution-command
+          - $(inputs.params.execution_command)
+          - --framework
+          - $(inputs.params.framework)
+          - --framework-version
+          - $(inputs.params.framework_version)
+          - --runtime
+          - $(inputs.params.runtime)
+          - --runtime-version
+          - $(inputs.params.runtime_version)
+          - --run-definition
+          - $(inputs.params.run_definition)
+          - --run-name
+          - $(inputs.params.run_name)
+          - --author-name
+          - default-author
+          - --compute-name
+          - $(inputs.params.compute_name)
+          - --compute-nodes
+          - $(inputs.params.compute_nodes)
+          - --output-run-uid-path
+          - $(results.run-uid.path)
+          - --output-training-uid-path
+          - $(results.training-uid.path)
+          command:
+          - python3
+          image: docker.io/aipipeline/wml-train:latest
+          imagePullPolicy: Always
+          name: main
+          volumeMounts:
+          - mountPath: /app/secrets
+            name: kfp-creds
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf run_uid.tgz $(results.run-uid.path)
+
+            mc cp run_uid.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/run_uid.tgz
+
+            tar -cvzf training_uid.tgz $(results.training-uid.path)
+
+            mc cp training_uid.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/training_uid.tgz
+
+            '
+        volumes:
+        - name: kfp-creds
+          secret:
+            secretName: kfp-creds
+    - name: store-model-watson-machine-learning
+      params:
+      - name: framework
+        value: $(params.framework)
+      - name: framework_version
+        value: $(params.framework_version)
+      - name: model_name
+        value: $(params.model_name)
+      - name: runtime_version
+        value: $(params.runtime_version)
+      - name: train-model-watson-machine-learning-run_uid
+        value: $(tasks.train-model-watson-machine-learning.results.run-uid)
+      taskSpec:
+        params:
+        - name: framework
+        - name: framework_version
+        - name: model_name
+        - name: runtime_version
+        - name: train-model-watson-machine-learning-run_uid
+        results:
+        - description: /tmp/outputs/model_uid/data
+          name: model-uid
+        steps:
+        - args:
+          - -u
+          - /app/wml-store.py
+          - --run-uid
+          - $(inputs.params.train-model-watson-machine-learning-run_uid)
+          - --model-name
+          - $(inputs.params.model_name)
+          - --framework
+          - $(inputs.params.framework)
+          - --framework-version
+          - $(inputs.params.framework_version)
+          - --runtime-version
+          - $(inputs.params.runtime_version)
+          - --output-model-uid-path
+          - $(results.model-uid.path)
+          command:
+          - python3
+          image: docker.io/aipipeline/wml-store:latest
+          imagePullPolicy: Always
+          name: main
+          volumeMounts:
+          - mountPath: /app/secrets
+            name: kfp-creds
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf model_uid.tgz $(results.model-uid.path)
+
+            mc cp model_uid.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/model_uid.tgz
+
+            '
+        volumes:
+        - name: kfp-creds
+          secret:
+            secretName: kfp-creds
+    - name: deploy-model-watson-machine-learning
+      params:
+      - name: model_name
+        value: $(params.model_name)
+      - name: scoring_payload
+        value: $(params.scoring_payload)
+      - name: store-model-watson-machine-learning-model_uid
+        value: $(tasks.store-model-watson-machine-learning.results.model-uid)
+      taskSpec:
+        params:
+        - name: model_name
+        - name: scoring_payload
+        - name: store-model-watson-machine-learning-model_uid
+        results:
+        - description: /tmp/outputs/scoring_endpoint/data
+          name: scoring-endpoint
+        - description: /tmp/outputs/model_uid/data
+          name: model-uid
+        steps:
+        - args:
+          - -u
+          - /app/wml-deploy.py
+          - --model-uid
+          - $(inputs.params.store-model-watson-machine-learning-model_uid)
+          - --model-name
+          - $(inputs.params.model_name)
+          - --scoring-payload
+          - $(inputs.params.scoring_payload)
+          - --deployment-name
+          - ''
+          - --output-scoring-endpoint-path
+          - $(results.scoring-endpoint.path)
+          - --output-model-uid-path
+          - $(results.model-uid.path)
+          command:
+          - python
+          image: docker.io/aipipeline/wml-deploy:latest
+          imagePullPolicy: Always
+          name: main
+          volumeMounts:
+          - mountPath: /app/secrets
+            name: kfp-creds
+        - env:
+          - name: PIPELINERUN
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineRun']
+          - name: PIPELINETASK
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tekton.dev/pipelineTask']
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: accesskey
+                name: mlpipeline-minio-artifact
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretkey
+                name: mlpipeline-minio-artifact
+          image: minio/mc
+          name: copy-artifacts
+          script: '#!/usr/bin/env sh
+
+            mc config host add storage http://minio-service.$NAMESPACE:9000 $AWS_ACCESS_KEY_ID
+            $AWS_SECRET_ACCESS_KEY
+
+            tar -cvzf model_uid.tgz $(results.model-uid.path)
+
+            mc cp model_uid.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/model_uid.tgz
+
+            tar -cvzf scoring_endpoint.tgz $(results.scoring-endpoint.path)
+
+            mc cp scoring_endpoint.tgz storage/mlpipeline/artifacts/$PIPELINERUN/$PIPELINETASK/scoring_endpoint.tgz
+
+            '
+        volumes:
+        - name: kfp-creds
+          secret:
+            secretName: kfp-creds
