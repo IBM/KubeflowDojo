@@ -1,4 +1,4 @@
-Date: Wed June 24, 2020
+Date: Wed July 15, 2020
 
 |Time|Topic|Presenter|
 |---|---|---|
@@ -16,7 +16,7 @@ Date: Wed June 24, 2020
 |2:15pm - 2:45pm|Kubeflow pipelines handson||
 |2:45pm - 4:00pm|Q&A||
 
-Date: Thu June 25, 2020
+Date: Thu July 16, 2020
 
 |Time|Topic|Presenter|
 |---|---|---|
