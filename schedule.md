@@ -29,7 +29,7 @@ Date: Thu July 16, 2020
 |11:15am - 11:30am|Katib deep dive|Kevin||
 |11:30am - 12:00pm|kfp-tekton handson|||
 |12:00pm - 1:00pm|Lunch break|||
-|1:00pm - 1:15pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pptx)<br>[Video](https://video.ibm.com/embed/recorded/127022679)|
+|1:00pm - 1:15pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://video.ibm.com/embed/recorded/127022679)|
 |1:15pm - 1:45pm|PR workflow handson|||
 |1:45pm - 2:00pm|Contributor ladder and best practices|Animesh||
 |2:00pm - 2:05pm|Wrap up|Animesh||
