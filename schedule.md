@@ -21,7 +21,7 @@ Date: Thu July 16, 2020
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
 |8:00am - 8:15am|Overview of Kubeflow repos|Tommy||
-|8:15am - 8:45am|Control plane deep dive|Weiqiang||
+|8:15am - 8:45am|Control plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)|
 |8:45am - 9:45am|Pipelines + kfp-tekton deep dive|Tommy & Christian||
 |9:45am - 10:00am|Break|||
 |10:00am - 10:30am|kfserving deep dive|Animesh||
