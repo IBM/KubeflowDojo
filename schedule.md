@@ -8,7 +8,7 @@ Date: Wed July 15, 2020
 |9:00am - 9:15am|Break|||
 |9:15am - 10:45am|Git and Github|Tom||
 |10:45am - 11:00am|Break|||
-|11:00am - 11:30am|Kubeflow development environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/Yu97fjNWdcQ)|
+|11:00am - 11:30am|Kubeflow development environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/UwaKoVJwaaI)|
 |11:30am - 12:00pm|Kubeflow deployment handson||[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:00pm|Tryout Kubeflow components|Tommy||
@@ -29,7 +29,7 @@ Date: Thu July 16, 2020
 |11:15am - 11:30am|Katib deep dive|Kevin||
 |11:30am - 12:00pm|kfp-tekton handson|||
 |12:00pm - 1:00pm|Lunch break|||
-|1:00pm - 1:15pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://video.ibm.com/embed/recorded/127022679)|
+|1:00pm - 1:15pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://youtu.be/4EBQkfbbUTM)|
 |1:15pm - 1:45pm|PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)|
 |1:45pm - 2:00pm|Contributor ladder and best practices|Animesh||
 |2:00pm - 2:05pm|Wrap up|Animesh||
