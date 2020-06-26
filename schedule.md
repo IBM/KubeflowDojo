@@ -8,7 +8,7 @@ Date: Wed July 15, 2020
 |9:00am - 9:15am|Break|||
 |9:15am - 10:45am|Git and Github|Tom||
 |10:45am - 11:00am|Break|||
-|11:00am - 11:30am|Kubeflow development environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)|
+|11:00am - 11:30am|Kubeflow development environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/Yu97fjNWdcQ)|
 |11:30am - 12:00pm|Kubeflow deployment handson||[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:00pm|Tryout Kubeflow components|Tommy||
