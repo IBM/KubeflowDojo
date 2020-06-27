@@ -11,7 +11,7 @@ Date: Wed July 15, 2020
 |11:30am - 12:00 pm |Control plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)|
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:00pm|Kubeflow deployment handson||[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)|
-|2:00pm - 3:00pm|Tryout Kubeflow components|Tommy||
+|2:00pm - 3:00pm|Tryout Kubeflow Components|Tommy||
 |3:00pm - 4:00pm|Q&A|||
 
 Date: Thu July 16, 2020
