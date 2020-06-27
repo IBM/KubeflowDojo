@@ -29,5 +29,5 @@ Date: Thu July 16, 2020
 |2:00pm - 2:15pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://youtu.be/4EBQkfbbUTM)|
 |2:15pm - 2:45pm|PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)|
 |2:45pm - 3:00pm|Contributor ladder and best practices|Animesh||
-|3:00pm - 3:05pm|Wrap up|Animesh||
-|3:05pm - 4:00pm|Q&A|||
+|3:00pm - 3:15pm|Wrap up|Animesh||
+|3:15pm - 4:00pm|Q&A|||
