@@ -5,7 +5,7 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 # Schedule
 
-Date: Wed July 15, 2020
+Date: **Wed July 15, 2020**
 
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
@@ -21,7 +21,7 @@ Date: Wed July 15, 2020
 |2:00pm - 3:00pm|Tryout Kubeflow Components|Tommy|[Notebook](HandsOn/day1/README.md)|
 |3:00pm - 4:00pm|Q&A|||
 
-Date: Thu July 16, 2020
+Date: **Thu July 16, 2020**
 
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
