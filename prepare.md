@@ -16,7 +16,7 @@ There are dozens of projects around **Kubeflow**, including some of the most act
 
 Read the [document](http://kubeflow.org) to learn more about Kubeflow.
 
-For anyone who is interested in the **Kubeflow** project and would like to contribute, browsing through the [`community`](github.com/kubeflow/community) project is a good start. You will get the info of the community behind the Kubeflow, study the architecture and design and involve in the community discussion.
+For anyone who is interested in the **Kubeflow** project and would like to contribute, browsing through the [`community`](https://github.com/kubeflow/community) project is a good start. You will get the info of the community behind the Kubeflow, study the architecture and design and involve in the community discussion.
 
 This Kubeflow live and recorded dojo will help you understand the project deeper by presenting the architecture design and code walkthrough of major components of the Kubeflow project. You will also participate in several handson sessions to get a head start messing with the project.
 
