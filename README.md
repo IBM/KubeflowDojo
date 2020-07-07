@@ -10,7 +10,7 @@ Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
 |8:00am - 8:30 am|Data and AI Open Source at CODAIT|Animesh||
-|8:30am - 9:30 am|Kubeflow Overview - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](/Presentations/Kubeflow-e2e-Dojo-external.pdf)|
+|8:30am - 9:30 am|Kubeflow Overview - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
 |9:30am - 9:45am|Break|||
 |9:45am - 10:45am|Git and Github|Tom & Morgan|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
 |10:45am - 11:00am|Break|||
