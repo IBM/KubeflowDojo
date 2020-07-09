@@ -6,6 +6,7 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 # Schedule
 
 Date: **Wed July 15, 2020**
+Time: **All times listed are in PST time zone**
 
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
