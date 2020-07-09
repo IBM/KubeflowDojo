@@ -3,11 +3,17 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 ![kubeflow-dojo](images/kubeflow-dojo.png)
 
-# Schedule
+# Schedule and Prereqs
+
+* When: 
+
+**Wed July 15, 2020** End to end presentation and walk through on Kubeflow, followed by detailed deep dive and hands on deploying Kubeflow to Minikube and/or IBM Cloud Kubernetes Service (IKS). Please look at [prereqs](https://github.com/IBM/KubeflowDojo/blob/master/prereqs.md)
+
+**Thu July 16, 2020** Deeper dive sessions and demos on Kubeflow Pipelines, Kubeflow Serving (KFServing), and Distributed Training Operators and HPO, and Kubeflow PR workflow
+
+* Time: **All times listed are in PST time zone**
 
 Date: **Wed July 15, 2020**
-Time: **All times listed are in PST time zone**
-
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
 |8:00am - 8:30 am|Data and AI Open Source at CODAIT|Animesh||
