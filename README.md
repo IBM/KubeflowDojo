@@ -20,7 +20,7 @@ Date: **Wed July 15, 2020**
 |8:15am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
 |9:30am - 10:45 am|Kubeflow Overview - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
 |10:45am - 11:00am|Break|||
-|11:00am - 11:30am|Kubeflow development environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
+|11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
 |11:30am - 12:00 pm |Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://youtu.be/rQaqJxwlpLk)|
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:00pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
