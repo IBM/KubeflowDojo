@@ -23,9 +23,10 @@ Date: **Wed July 15, 2020**
 |11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
 |11:30am - 12:00 pm |Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://youtu.be/rQaqJxwlpLk)|
 |12:00pm - 1:00pm|Lunch break|||
-|1:00pm - 2:00pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
-|2:00pm - 3:00pm|Tryout Kubeflow Components|Tommy|[Notebook](HandsOn/day1/README.md)|
-|3:00pm - 4:00pm|Q&A|||
+|1:00pm - 2:30pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
+|2:30am - 2:45am|Break|||
+|2:45pm - 3:30pm|Tryout Kubeflow Components|Tommy|[Notebook](HandsOn/day1/README.md)|
+|3:30pm - 4:00pm|Q&A|||
 
 Date: **Thu July 16, 2020**
 
