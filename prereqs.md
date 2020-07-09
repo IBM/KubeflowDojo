@@ -30,6 +30,8 @@ However, before anyone comes to the dojo materials and thinks to contribute, he 
 
 4. ***Istio*** and ***knative***: (optional) Istio is a service mesh. In Kubeflow project, istio provides ingress and egress gateways. Follow [IBM internal link](https://w3.ibm.com/developer/docs/open-source/istio/) or [external link](https://video.ibm.com/embed/recorded/126773530) to learn more about istio. knative is cloud native platform to deploy and manage modern serverless workloads. Together with kfserving in Kubeflow, the serverless inferencing becomes simple. Follow the [IBM internal link](https://w3.ibm.com/developer/docs/open-source/knative/) and [external link](https://video.ibm.com/embed/recorded/126773537) to learn more about knative.
 
-Besides the technical side of preparedness, you should also have the access to a cloud cluster. For the purpose of this dojo, a one-node [`minikube`](https://kubernetes.io/docs/tutorials/hello-minikube/) cluster running on a laptop is enough. Better yet if you have access to a fully operational cloud cluster.
+5. ***Access to a Kubernetes cluster***: Last but most importantly, for anyone interesting in Kubeflow project the access to a Kuberenetes cluster is a must. The minimal cluster configuration for running most applications of Kubeflow is *8 vcpu, 16gb memory and at least 50gb of disk for docker registry*.
 
-If you need to create a cluster before attending the dojo presentation, follow the [minikube-setup.md](minikube-setup.md) to set up a `minikube` cluster.
+Note that during the live session for this dojo, some IBM Cloud Kubernetes clusters will be provided for hands on workshops. But the amount of the clusters is very limited and the clusters will be deleted once the workshop ends.
+
+Alternatively, just for the purpose of this dojo, a one-node [`minikube`](https://kubernetes.io/docs/tutorials/hello-minikube/) cluster running on a laptop is enough. If you need to create a minikube cluster before attending the dojo presentation, follow the [minikube-setup.md](minikube-setup.md) to set up a `minikube` cluster.
