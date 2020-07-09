@@ -11,7 +11,7 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 **Thu July 16, 2020:** Deeper dive sessions and demos on Kubeflow Pipelines, Kubeflow Serving (KFServing), Distributed Training Operators and HPO, and Kubeflow PR workflow
 
-**Where:** Pleade register at the following link: http://ibm.biz/KubeflowDojo
+**Where:** Please register at the following link: http://ibm.biz/KubeflowDojo
 
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
