@@ -5,7 +5,7 @@ Read about [IBM's journey with Kuebflow here](https://developer.ibm.com/blogs/ku
 
 ![kubeflow-dojo](images/kubeflow-dojo.png)
 
-# Schedule and Prereqs
+# Live Schedule and Prereqs
 
 **When:** July 15th and 16th. All times listed are in PST time zone
 
