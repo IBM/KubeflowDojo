@@ -1,18 +1,32 @@
-# Kubeflow Pipelines with Tekton - Dojo Day 2 HandsOn
+# Kubeflow Pipelines with Tekton - Compiler (Dojo Day 2 Hands-On)
 
-In this HandsOn we will go into detail on the KFP-Tekton project, how to compile
+In this Hands-On we will go into detail on the KFP-Tekton project, how to compile
 Kubeflow Pipelines to Tekton YAML and run the pipeline with Tekton on a
 Kubernetes cluster.
 
 
-## Prerequisites
+# Table of Contents
 
-1. [`Python`](https://www.python.org/downloads/): version `3.5` or later
-2. [`Kubernetes` Cluster](https://v1-15.docs.kubernetes.io/docs/setup/): version `1.15` ([required by Kubeflow](https://www.kubeflow.org/docs/started/k8s/overview/) and Tekton 0.11)
+- [Prerequisites](#prerequisites)
+  - [Installing Tekton](#installing-tekton)
+    - [Tekton Cluster](#tekton-cluster)
+    - [Tekton CLI](#tekton-cli)
+    - [Tekton Dashboard](#tekton-dashboard)
+  - [Install KFP-Tekton Compiler](#install-kfp-tekton-compiler)
+- [Compiling a Kubeflow Pipelines DSL Script](#compiling-a-kubeflow-pipelines-dsl-script)
+- [Running the Pipeline on a Tekton Cluster](#running-the-pipeline-on-a-tekton-cluster)
+- [Finding the PipelineRun in the Tekton Dashboard](#finding-the-pipelinerun-in-the-tekton-dashboard)
+- [Optional: Compiling to Argo YAML (KFP Default)](#optional-compiling-to-argo-yaml-kfp-default)
+
+
+# Prerequisites
+
+1. [_Python_](https://www.python.org/downloads/): version `3.5` or later
+2. [_Kubernetes_ Cluster](https://v1-15.docs.kubernetes.io/docs/setup/): version `1.15` ([required by Kubeflow](https://www.kubeflow.org/docs/started/k8s/overview/) and Tekton 0.11)
 3. [`kubectl` CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/): required to deploy Tekton pipelines to Kubernetes cluster
-4. [`Tekton` Deployment](https://github.com/tektoncd/pipeline/releases/tag/v0.13.0/): version `0.13.0` (or greater to support Tekton API version `v1beta1`), required for end-to-end testing
+4. [_Tekton_ Deployment](https://github.com/tektoncd/pipeline/releases/tag/v0.13.0/): version `0.13.0` (or greater to support Tekton API version `v1beta1`), required for end-to-end testing
 5. [`tkn` CLI](https://github.com/tektoncd/cli#installing-tkn): required to work with Tekton pipelines
-6. [`Kubeflow Pipelines` Deployment](https://www.kubeflow.org/docs/pipelines/installation/overview/): required for some end-to-end tests
+6. [_Kubeflow Pipelines_](https://www.kubeflow.org/docs/pipelines/installation/overview/) Deployment: required for some end-to-end tests
 
 
 ## Installing Tekton
@@ -22,10 +36,10 @@ A working Tekton cluster deployment is required to perform end-to-end tests of t
 
 ### Tekton Cluster
 
-Follow the instructions listed [here](https://github.com/tektoncd/pipeline/blob/v0.13.0/docs/install.md#installing-tekton-pipelines-on-kubernetes)
+Follow the instructions listed [here](https://github.com/tektoncd/pipeline/blob/v0.14.0/docs/install.md#installing-tekton-pipelines-on-kubernetes)
 or simply run:
 
-    kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.13.0/release.yaml
+    kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.14.0/release.yaml
 
 **Note**, if your container runtime does not support image-reference:tag@digest (like cri-o used in OpenShift 4.x),
 use `release.notags.yaml` instead.
@@ -63,9 +77,9 @@ be patched to expose a public `NodePort` IP:
    
 To open the dashboard run:
 
-    TKN_DASHBOARD_SVC_PORT=$(kubectl -n tekton-pipelines get service tekton-dashboard -o jsonpath='{.spec.ports[0].nodePort}')
+    TKN_UI_PORT=$(kubectl -n tekton-pipelines get service tekton-dashboard -o jsonpath='{.spec.ports[0].nodePort}')
     PUBLIC_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}')
-    open "http://${PUBLIC_IP}:${TKN_DASHBOARD_SVC_PORT}/#/pipelineruns"
+    open "http://${PUBLIC_IP}:${TKN_UI_PORT}/#/pipelineruns"
 
 
 ## Install KFP-Tekton Compiler
@@ -151,7 +165,7 @@ Once the Tekton Pipeline is running, the logs should start streaming:
     [echo : main]
 
 
-# Find the PipelineRun in the Tekton Dashboard
+# Finding the PipelineRun in the Tekton Dashboard
 
 1. From the Terminal, run the following commands to open the **PipelineRuns** on the Tekton dashboard:
 
@@ -169,3 +183,27 @@ Once the Tekton Pipeline is running, the logs should start streaming:
    to see the log output:
    
    ![](images/tekton-dashboard-detail.png)
+
+
+# Optional: Compiling to Argo YAML (KFP Default)
+
+If a [_Tekton_ Cluster](#tekton-cluster) deployment is not available, compiling the Kubeflow Pipeline DSL scripts to
+Argo YAML works very similar to the [compilation step](#compiling-a-kubeflow-pipelines-dsl-script) described above.
+Instead of the `dsl-compile-tekton` command, use the `dsl-compile` executable, which should be available in your
+terminal shell environment after installing either the `kfp-tekton` or the `kfp` Python package. The output should be
+a `.tar.gz` file in order to upload the compiled pipeline to the Kubeflow Pipelines web interface.
+
+    dsl-compile \
+        --py sdk/python/tests/compiler/testdata/parallel_join.py \
+        --output pipeline.tar.gz
+        
+Take a look at the Kubeflow Pipelines documentation to learn more about
+[compiling Kubeflow Pipeline samples on the command line][dsl-compile-tutorial] and read through the
+[Pipelines Quickstart tutorial][kubeflow-pipelines-tutorial] to learn about using the Kubeflow Pipelines
+web interface.
+
+
+<!-- external links -->
+
+[dsl-compile-tutorial]: https://www.kubeflow.org/docs/pipelines/tutorials/build-pipeline/#compiling-the-samples-on-the-command-line
+[kubeflow-pipelines-tutorial]: https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/
