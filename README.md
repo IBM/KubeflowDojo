@@ -39,7 +39,7 @@ Date: **Thu July 16, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
 |8:00am - 8:30am|Overview of Kubeflow repos|Tommy|[Slides](Presentations/KubeflowRepos.pdf)|
-|8:30 am - 9:30am|Kubeflow Pipelines deep dive|Animesh, Tommy, Christian|[Slides](Presentations/KubeflowPipelines-Tekton-Dojo.pdf)<br>[Video](https://youtu.be/PoEhn5teUcU)|
+|8:30 am - 9:30am|Kubeflow Pipelines deep dive|Animesh, Tommy, Christian|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-pipelines-with-tekton-236769976)<br>[Video](https://youtu.be/PoEhn5teUcU)|
 |9:30am - 9:45am|Break|||
 |9:45 am - 10:45am|Kubeflow Pipelines-Tekton hands on| Christian Kadner, Tommy Li|[KFP with Tekton](/HandsOn/KFP-Tekton/)|
 |10:45am - 11 am|Break|||
