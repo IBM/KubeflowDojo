@@ -14,7 +14,7 @@ Note that during the live session for this dojo, few IBM Cloud Kubernetes cluste
 
 Alternatively, just for the purpose of this dojo, a one-node [`minikube`](https://kubernetes.io/docs/tutorials/hello-minikube/) cluster running on a laptop is enough. If you need to create a minikube cluster before attending the dojo presentation, follow the [minikube-setup.md](minikube-setup.md) to set up a `minikube` cluster.
 
-2. ***git*** and ***github***: The Kubeflow project source code is hosted on [github](github.com/kubeflow). Code delivery is through `git` command. You may watch the presentation with the [IBM internal link](https://w3.ibm.com/developer/docs/open-source/general-open-source/) or [external link for git](https://video.ibm.com/embed/recorded/126773542) and [external link for pull requests](https://video.ibm.com/embed/recorded/126773518).
+2. ***git*** and ***github***: The Kubeflow project source code is hosted on [github](https://github.com/kubeflow). Code delivery is through `git` command. You may watch the presentation with the [IBM internal link](https://w3.ibm.com/developer/docs/open-source/general-open-source/) or [external link for git](https://video.ibm.com/embed/recorded/126773542) and [external link for pull requests](https://video.ibm.com/embed/recorded/126773518).
 
 3. ***golang***: The main source codes are either in `golang` or `python` for the Kubeflow project. To learn more on the language, go to [IBM internal link](https://w3.ibm.com/developer/docs/open-source/general-open-source/) or [external link](https://video.ibm.com/embed/recorded/126773543).
 
