@@ -22,7 +22,7 @@ The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitat
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
-|8:00am - 8:15 am|Welcome Remarks: Data and AI Open Source at CODAIT|Animesh|
+|8:00am - 8:15 am|Data and AI OpenSouce landscape |Animesh|
 |8:15am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
 |9:30am - 10:45 am|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
 |10:45am - 11:00am|Break|||
