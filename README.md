@@ -7,13 +7,15 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 **When:** July 15th and 16th. All times listed are in PST time zone
 
-**Wed July 15, 2020:** End to end presentation and walk through on Kubeflow, followed by detailed deep dive and hands on deploying Kubeflow to Minikube and/or IBM Cloud Kubernetes Service (IKS). Please look at [prereqs](https://github.com/IBM/KubeflowDojo/blob/master/prereqs.md)
+**Wed July 15, 2020:** End to end presentation and walk through on Kubeflow, followed by detailed deep dive and hands on deploying Kubeflow to Minikube and/or IBM Cloud Kubernetes Service (IKS).
 
 **Thu July 16, 2020:** Deeper dive sessions and demos on Kubeflow Pipelines, Kubeflow Serving (KFServing), Distributed Training Operators and HPO, and Kubeflow PR workflow
 
 **Where:** Please register at the following link: http://ibm.biz/KubeflowDojo
 
 The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitation to Kubeflow Slack workspace](https://join.slack.com/t/kubeflow/shared_invite/zt-cpr020z4-PfcAue_2nw67~iIDy7maAQ). There is a channel **#kubeflow-dojo** created for the workshop.
+
+**Prereqs:** Please look at [prereqs here](https://github.com/IBM/KubeflowDojo/blob/master/prereqs.md)
 
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
