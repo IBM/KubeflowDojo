@@ -13,7 +13,7 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 **Where:** Please register at the following link: http://ibm.biz/KubeflowDojo
 
-The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitation to Kubeflow Slack workspace](https://join.slack.com/t/kubeflow/shared_invite/zt-cpr020z4-PfcAue_2nw67~iIDy7maAQ). There is a channel #kubeflow-dojo created for the workshop.
+The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitation to Kubeflow Slack workspace](https://join.slack.com/t/kubeflow/shared_invite/zt-cpr020z4-PfcAue_2nw67~iIDy7maAQ). There is a channel **#kubeflow-dojo** created for the workshop.
 
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
