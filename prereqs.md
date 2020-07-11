@@ -1,6 +1,6 @@
 # Prepare for Kubeflow Dojo
 
-[Kubeflow](github.com/kubeflow) is community driven open source mega project to make the deployment of AI/ML stacks on cloud native platforms, such as Kubernetes and OpenShift Container Platform. Read the [document](http://kubeflow.org) to learn more about Kubeflow. For anyone who is interested in the **Kubeflow** project and would like to contribute, browsing through the [`community`](https://github.com/kubeflow/community) project is a good start. You will get the info of the community behind the Kubeflow, study the architecture and design and involve in the community discussion.
+[Kubeflow](https://github.com/kubeflow) is community driven open source mega project to make the deployment of AI/ML stacks on cloud native platforms, such as Kubernetes and OpenShift Container Platform. Read the [document](http://kubeflow.org) to learn more about Kubeflow. For anyone who is interested in the **Kubeflow** project and would like to contribute, browsing through the [`community`](https://github.com/kubeflow/community) project is a good start. You will get the info of the community behind the Kubeflow, study the architecture and design and involve in the community discussion.
 
 This Kubeflow live and recorded dojo will help you understand the project deeper by presenting the architecture design and code walkthrough of major components of the Kubeflow project. You will also participate in several handson sessions to get a head start messing with the project.
 
@@ -22,12 +22,12 @@ Alternatively, just for the purpose of this dojo, a one-node [`minikube`](https:
 
 There are dozens of projects around **Kubeflow**, including some of the most active. Please browse through them.
 
-* [kubeflow](github.com/kubeflow/kubeflow) the main anchor project
-* [pipelines](github.com/kubeflow/pipelines) the ML pipelines
-* [manifests](github.com/kubeflow/manifests) the manifest repoository for Kubeflow applications
-* [kfp-tekton](github.com/kubeflow/kfp-tekton) the pipeline compiler to transform a Kubeflow Pipeline DSL to Tekton yaml manifest
-* [katib](github.com/kubeflow/katib) the repository for hyperparameter tuning
-* [kfserving](github.com/kubeflow/kfserving) the serverless inferencing on Kubernetes
-* [kfctl](github.com/kubeflow/kfctl) the control plane to deploy and maintain Kubeflow
-* [website](github.com/kubeflow/website) the document
+* [kubeflow](https://github.com/kubeflow/kubeflow) the main anchor project
+* [pipelines](https://github.com/kubeflow/pipelines) the ML pipelines
+* [manifests](https://github.com/kubeflow/manifests) the manifest repoository for Kubeflow applications
+* [kfp-tekton](https://github.com/kubeflow/kfp-tekton) the pipeline compiler to transform a Kubeflow Pipeline DSL to Tekton yaml manifest
+* [katib](https://github.com/kubeflow/katib) the repository for hyperparameter tuning
+* [kfserving](https://github.com/kubeflow/kfserving) the serverless inferencing on Kubernetes
+* [kfctl](https://github.com/kubeflow/kfctl) the control plane to deploy and maintain Kubeflow
+* [website](https://github.com/kubeflow/website) the document
 * and more
