@@ -75,7 +75,7 @@ Note: if you are running `Docker Desktop` which may come with the option to star
 cd $HOME
 mkdir kfdef
 cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_k8s_istio.yaml
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
 ```
 
 * Check the deployment
@@ -114,7 +114,7 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   - Delete the current Kubeflow
 
   ```shell
-  kfctl delete -f kfctl_k8s_istio.yaml
+  kfctl delete -f kfctl_ibm_tekton.yaml
 
   kubectl delete mutatingwebhookconfigurations admission-webhook-mutating-webhook-configuration
   kubectl delete mutatingwebhookconfigurations inferenceservice.serving.kubeflow.org
@@ -146,12 +146,12 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   ```shell
   cd $HOME/kfdef
   rm -rf .cache kustomize
-  # wget https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.yaml
-  sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_k8s_istio.yaml
+  # wget https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm_tekton.yaml
+  sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
 
   KUBEFLOW_NAMESPACE=kubeflow
   kubectl create ns ${KUBEFLOW_NAMESPACE}
-  kubectl create -f kfctl_k8s_istio.yaml -n ${KUBEFLOW_NAMESPACE}
+  kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
   ```
 
   - Watch the progress
@@ -160,24 +160,9 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
   ```
 
-* Install `tekton pipelines`
-
-  - Deploy `tekton pipelines`
-
-  ```shell
-  kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.11.3/release.yaml
-  kubectl patch cm feature-flags -n tekton-pipelines \
-    -p '{"data":{"disable-home-env-overwrite":"true","disable-working-directory-overwrite":"true"}}'
-  ```
+* Use `tekton pipelines`
 
   - Install CLI follow the [instructions](https://github.com/tektoncd/cli#installing-tkn)
-
-  - Install `tekton dashboard`
-
-  ```shell
-  kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.6.1/tekton-dashboard-release.yaml
-  kubectl patch svc tekton-dashboard -n tekton-pipelines --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
-  ```
 
   - Access `tekton dashboard`
 
