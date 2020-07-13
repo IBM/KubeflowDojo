@@ -103,7 +103,7 @@ kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"st
 cd $HOME
 mkdir kfdef
 cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm.yaml
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
 ```
 
 * Check the deployment
@@ -118,6 +118,18 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
 * Access Kubeflow dashboard
 
+  Thereare two approaches to access the dashboard. To access the dashboard with the cluster ip, run following:
+
+  - Retrieve cluster ip
+
+  ```shell
+  export CLUSTER_IP=$(kubectl get node -o wide|grep Ready|awk '{print $7; exit}')
+  ```
+
+  Now you can access the dashboard through `http://$CLUSTER_IP:31380`.
+
+  Another approach is to use port forwarding as follow:
+
   - Port forward `istio-ingressgateway`
 
   ```shell
@@ -126,9 +138,7 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
   - Access the dashboard through `localhost:8080`
 
-  - Follow the instructions to have the profile namespace created
-
-  - Run a pipeline tutorial
+Follow the instructions to have the profile namespace created and run a pipeline tutorial.
 
 ## Deploy Kubeflow with Kubeflow operator
 
@@ -136,7 +146,7 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
 ```shell
 cd kfdef
-kfctl delete -f kfctl_ibm.yaml
+kfctl delete -f kfctl_ibm_tekton.yaml
 
 kubectl delete mutatingwebhookconfigurations --all
 ```
@@ -178,15 +188,7 @@ kubectl create -f kfctl_ibm.yaml -n ${KUBEFLOW_NAMESPACE}
 kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
 ```
 
-## Deploy `tekton pipelines`
-
-* Install `tekton pipelines`
-
-```shell
-kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.11.3/release.yaml
-kubectl patch cm feature-flags -n tekton-pipelines \
-  -p '{"data":{"disable-home-env-overwrite":"true","disable-working-directory-overwrite":"true"}}'
-```
+## Use `tekton pipelines`
 
 * Install CLI follow the [instructions](https://github.com/tektoncd/cli#installing-tkn)
 
@@ -194,13 +196,6 @@ kubectl patch cm feature-flags -n tekton-pipelines \
 # on MacOS
 brew tap tektoncd/tools
 brew install tektoncd/tools/tektoncd-cli
-```
-
-* Install `tekton dashboard`
-
-```shell
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.6.1/tekton-dashboard-release.yaml
-kubectl patch svc tekton-dashboard -n tekton-pipelines --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
 ```
 
 * Access `tekton dashboard`
