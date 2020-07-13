@@ -6,7 +6,7 @@ If you already have access to an IBM Cloud Kubernetes cluster, please use it for
 
 * Create an `IBMid`
 
-(Optional) If you do not have an `IBMid`, go to [IBM Cloud](https://cloud.ibm.com/login) to create an account to access IBM Cloud clusters. For IBM internal developers, you can use your internet id with SSO to access IBM Cloud.
+(Optional) If you do not have an `IBMid`, go to [IBM Cloud](https://ibm.biz/Bdqgck) to create an account to access IBM Cloud clusters. For IBM internal developers, you can use your internet id with SSO to access IBM Cloud.
 
 * Install CLI tools to access IBM Kubernetes cluster
 
