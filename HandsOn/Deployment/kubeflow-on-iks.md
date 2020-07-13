@@ -74,6 +74,16 @@ kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"st
   export GOPATH=$HOME/go
   ```
 
+## Install `kustomize`
+
+Follow this [link](https://kubernetes-sigs.github.io/kustomize/installation/) to install `kustomize`.
+
+On MacOS, this is one single command
+
+```shell
+brew install kustomize
+```
+
 ## Build `kfctl`
 
 * Clone and build `kfctl`
@@ -140,16 +150,24 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
 Follow the instructions to have the profile namespace created and run a pipeline tutorial.
 
-## Deploy Kubeflow with Kubeflow operator
+## Delete the Kubeflow deployment
 
 * Delete the current Kubeflow
 
 ```shell
 cd kfdef
+
+# to workaround some resources cleanup problem with current kfctl cli
+wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kustomization.yaml
+kustomize build --load_restrictor=none . >o.yaml
+kubectl delete -f o.yaml
+
 kfctl delete -f kfctl_ibm_tekton.yaml
 
 kubectl delete mutatingwebhookconfigurations --all
 ```
+
+## Deploy Kubeflow with Kubeflow operator
 
 * Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator
 
