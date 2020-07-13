@@ -10,6 +10,8 @@ However, before anyone comes to the dojo materials and thinks to contribute, he 
 
 Most importantly, for anyone interesting in Kubeflow project the access to a Kuberenetes cluster is a must. The minimal cluster configuration for running most applications of Kubeflow is **8 vcpu, 16gb memory and at least 50gb of disk for docker registry**.
 
+**We recommend run Kubeflow on Kubernetes 1.16 release.** Although Kubeflow deployment has been tested with Kubernetes up to 1.18 release, there are known issues with certain applications on latest release.
+
 Note that during the live session for this dojo, few IBM Cloud Kubernetes clusters will be provided for hands on workshops. But the amount of the clusters is very limited and the clusters will be deleted once the workshop ends.
 
 Alternatively, just for the purpose of this dojo, a one-node [`minikube`](https://kubernetes.io/docs/tutorials/hello-minikube/) cluster running on a laptop is enough. If you need to create a minikube cluster before attending the dojo presentation, follow the [minikube-setup.md](minikube-setup.md) to set up a `minikube` cluster.
