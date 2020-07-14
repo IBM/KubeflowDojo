@@ -50,6 +50,7 @@ Note: if you are running `Docker Desktop` which may come with the option to star
   export GOPATH=$HOME/go
   ```
 
+* Download the `kfctl`
 * Clone and build `kfctl`
 
   - Clone
@@ -75,7 +76,7 @@ Note: if you are running `Docker Desktop` which may come with the option to star
 cd $HOME
 mkdir kfdef
 cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_k8s_istio.yaml
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
 ```
 
 * Check the deployment
@@ -102,26 +103,16 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
   - Run a pipeline tutorial
 
-* `kfctl` source code walkthrough with VSC
-
-  - Install `Go` extension
-  - Open the folder to `$GOPATH/src/github.com/kubeflow/kfctl`
-  - Run/Debug test from the IDE
-  - Debug within VSC
-
-* Deploy Kubeflow with the operator
-
-  - Delete the current Kubeflow
+* Delete the current Kubeflow
 
   ```shell
-  kfctl delete -f kfctl_k8s_istio.yaml
+  kfctl delete -f kfctl_ibm_tekton.yaml
 
-  kubectl delete mutatingwebhookconfigurations admission-webhook-mutating-webhook-configuration
-  kubectl delete mutatingwebhookconfigurations inferenceservice.serving.kubeflow.org
-  kubectl delete mutatingwebhookconfigurations istio-sidecar-injector
-  kubectl delete mutatingwebhookconfigurations katib-mutating-webhook-config
-  kubectl delete mutatingwebhookconfigurations mutating-webhook-configurations
+  kubectl delete mutatingwebhookconfigurations --all
+  kubectl delete validatingwebhookconfigurations --all
   ```
+
+* Deploy Kubeflow with the operator
 
   - Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator
 
@@ -146,12 +137,12 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   ```shell
   cd $HOME/kfdef
   rm -rf .cache kustomize
-  # wget https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.yaml
-  sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_k8s_istio.yaml
+  wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+  sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
 
   KUBEFLOW_NAMESPACE=kubeflow
   kubectl create ns ${KUBEFLOW_NAMESPACE}
-  kubectl create -f kfctl_k8s_istio.yaml -n ${KUBEFLOW_NAMESPACE}
+  kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
   ```
 
   - Watch the progress
@@ -160,24 +151,9 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
   ```
 
-* Install `tekton pipelines`
-
-  - Deploy `tekton pipelines`
-
-  ```shell
-  kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.11.3/release.yaml
-  kubectl patch cm feature-flags -n tekton-pipelines \
-    -p '{"data":{"disable-home-env-overwrite":"true","disable-working-directory-overwrite":"true"}}'
-  ```
+* Use `tekton pipelines`
 
   - Install CLI follow the [instructions](https://github.com/tektoncd/cli#installing-tkn)
-
-  - Install `tekton dashboard`
-
-  ```shell
-  kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.6.1/tekton-dashboard-release.yaml
-  kubectl patch svc tekton-dashboard -n tekton-pipelines --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
-  ```
 
   - Access `tekton dashboard`
 
@@ -186,3 +162,33 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
   ```
 
   To access, from browser [`http://localhost:9097`](http://localhost:9097).
+
+* `kfctl` source code walkthrough with VSC
+
+  - Install `Go` extension
+  - Open the folder to `$GOPATH/src/github.com/kubeflow/kfctl`
+  - Run/Debug test from the IDE
+  - Debug within VSC
+
+## Misc tasks
+
+### Enable LoadBalancer for Istio-ingressgateway
+
+To enable a dedicated LoadBalancer IP for Kubeflow, run:
+```shell
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+### Remove namespaces stuck with finalizers
+
+```shell
+kubectl proxy&
+pid=$!
+nss="kubeflow istio-system knative-serving cert-manager"
+for ns in $nss; do
+  kubectl delete ns $ns --force --grace-period=0
+  kubectl get namespace $ns -o json |jq '.spec = {"finalizers":[]}' >temp.json
+  curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$ns/finalize
+done
+kill -9 $pid
+```

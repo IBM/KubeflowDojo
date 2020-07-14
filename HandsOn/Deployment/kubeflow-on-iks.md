@@ -6,13 +6,26 @@ If you already have access to an IBM Cloud Kubernetes cluster, please use it for
 
 * Create an `IBMid`
 
-(Optional) If you do not have an `IBMid`, go to [IBM Cloud](https://cloud.ibm.com/login) to create an account to access IBM Cloud clusters. For IBM internal developers, you can use your internet id with SSO to access IBM Cloud.
+(Optional) If you do not have an `IBMid`, go to [IBM Cloud](https://ibm.biz/Bdqgck) to create an account to access IBM Cloud clusters. For IBM internal developers, you can use your internet id with SSO to access IBM Cloud.
 
 * Install CLI tools to access IBM Kubernetes cluster
 
 ```shell
 curl -sL https://ibm.biz/idt-installer | bash
 ```
+
+* Request access to a workshop cluster
+
+(Optional) There are a limited number of workshop clusters for the live dojo session. If you need the access to one of the clusters, open your browser with [`https://ikskubeflow.mybluemix.net`](https://ikskubeflow.mybluemix.net), enter `ikslab` as the lab key and your IBMid email to request a cluster ![request access](../../images/workshop-request.png).
+
+Once the request gets through, follow the `IBM Cloud account` link to view the cluster info ![cluster granted](../../images/workshop-granted.png).
+
+* Access the cluster
+
+```shell
+ibmcloud ks cluster config --cluster <cluster_name/id>
+```
+Replace the `<cluster_name/id>` with the cluster name or id provided to you.
 
 * Login to IBM Cloud
 
@@ -23,12 +36,7 @@ ibmcloud login -a cloud.ibm.com -r us-south -g default
 # ibmcloud login -a cloud.ibm.com -r us-south -g default --sso
 ```
 
-* Access the cluster
-
-```shell
-ibmcloud ks cluster config --cluster <cluster_name/id>
-```
-Replace the `<cluster_name/id>` with the cluster name or id provided to you.
+Note: if you have multiple accounts, choose `1840867 - Advowork`.
 
 ## Set up IBM Cloud Block Storage
 
@@ -57,7 +65,201 @@ kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"sto
 kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
-## Install Go tools
+There are two approaches to deploy Kubeflow. Either through Kubeflow Operator or `kfctl` CLI. Choose one of the two options to experiment Kubeflow deployment.
+
+## 1. Kubeflow deployment through `kfctl` CLI
+
+### Install `kfctl`
+
+`kfctl` can be downloaded from Kubeflow kfctl releases [link](https://github.com/kubeflow/kfctl/releases). For this workshop, the latest version should be used. Follow the instructions below to download the pre-built `kfctl` on `master` branch.
+
+```shell
+wget https://github.com/IBM/KubeflowDojo/raw/master/Binaries/kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
+tar zxvf kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
+chmod +x kfctl
+mv kfctl /usr/local/bin
+```
+
+### Deploy Kubeflow with `kfctl` CLI
+
+* Run the deployment with application manifests specified for IBM Cloud
+
+```shell
+cd $HOME
+mkdir kfdef
+cd kfdef
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+```
+
+* Check the deployment
+
+```shell
+kubectl get ns
+kubectl get pods -n istio-system
+kubectl get pods -n kubeflow
+```
+
+Wait until all pods and services are up and running in the `kubeflow` namespace than continue to the next steps.
+
+* Access Kubeflow dashboard
+
+  Thereare two approaches to access the dashboard. To access the dashboard with the cluster ip, run following:
+
+  - Retrieve cluster ip
+
+  ```shell
+  export CLUSTER_IP=$(kubectl get node -o wide|grep Ready|awk '{print $7; exit}')
+  ```
+
+  Now you can access the dashboard through `http://$CLUSTER_IP:31380`.
+
+  Another approach is to use port forwarding as follow:
+
+  - Port forward `istio-ingressgateway`
+
+  ```shell
+  kubectl port-forward --namespace istio-system $(kubectl get pod --namespace istio-system --selector="app=istio-ingressgateway" --output jsonpath='{.items[0].metadata.name}') 8080:80&
+  ```
+
+  - Access the dashboard through `localhost:8080`
+
+Follow the instructions to have the profile namespace created and run a pipeline tutorial.
+
+### Delete the Kubeflow deployment
+
+Only do this once you are don't need this Kubeflow deployment.
+
+* Delete the current Kubeflow
+
+```shell
+cd kfdef
+
+# to workaround some resources cleanup problem with current kfctl cli
+wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kustomization.yaml
+kustomize build --load_restrictor=none . >o.yaml
+kubectl delete -f o.yaml
+
+kfctl delete -f kfctl_ibm_tekton.yaml
+
+# manually remove some leftover webhooks
+kubectl delete mutatingwebhookconfigurations --all
+kubectl delete validatingwebhookconfigurations --all
+```
+
+## 2. Kubeflow deployment through Kubeflow operator
+
+Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator. Alternatively, if clusters have access to [Operator Lifecycle Manager](https://github.com/operator-framework/operator-lifecycle-manager), the Kubeflow Operator is also available in [operatorhub.io](https://operatorhub.io/) and can be accessed in clusters' operator catalog for quick install.
+  
+### Install `kustomize`
+
+Follow this [link](https://kubernetes-sigs.github.io/kustomize/installation/) to install `kustomize`.
+
+On MacOS, this is one single command
+
+```shell
+brew install kustomize
+```
+
+### Clone `kfctl` repo
+
+```shell
+cd $GOPATH/src
+mkdir -p github.com/kubeflow
+cd github.com/kubeflow
+git clone https://github.com/kubeflow/kfctl.git
+```
+
+### Deploy Kubeflow Operator
+
+```shell
+cd $GOPATH/src/github.com/kubeflow/kfctl
+export OPERATOR_NAMESPACE=operators
+kubectl create ns ${OPERATOR_NAMESPACE}
+
+cd deploy/
+kustomize edit set namespace ${OPERATOR_NAMESPACE}
+kustomize build | kubectl apply -f -
+```
+
+* Check `${OPERATOR_NAMESPACE}` for the operator
+
+```shell
+kubectl get pods -n ${OPERATOR_NAMESPACE}
+```
+
+### Create Kubeflow deployment with the operator
+
+```shell
+cd $HOME/kfdef
+rm -rf .cache *
+wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
+
+KUBEFLOW_NAMESPACE=kubeflow
+kubectl create ns ${KUBEFLOW_NAMESPACE}
+kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
+```
+
+* Watch the progress
+
+```shell
+kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
+```
+
+### Delete the Kubeflow deployment
+
+Only do this once you are don't need this Kubeflow deployment.
+
+```shell
+kubectl delete -f kfctl_ibm_tekton.yaml
+
+# manually remove some leftover webhooks
+kubectl delete mutatingwebhookconfigurations --all
+kubectl delete validatingwebhookconfigurations --all
+```
+
+## Use `tekton pipelines`
+
+* Install CLI follow the [instructions](https://github.com/tektoncd/cli#installing-tkn)
+
+```shell
+# on MacOS
+brew tap tektoncd/tools
+brew install tektoncd/tools/tektoncd-cli
+```
+
+* Access `tekton dashboard`
+
+```shell
+kubectl port-forward -n tekton-pipelines svc/tekton-dashboard 9097:9097&
+```
+
+To access, from browser [`http://localhost:9097`](http://localhost:9097).
+
+## Misc tasks
+
+### Enable LoadBalancer for Istio-ingressgateway
+
+To enable a dedicated LoadBalancer IP for Kubeflow, run:
+```shell
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+### Remove namespaces stuck with finalizers
+
+```shell
+kubectl proxy&
+pid=$!
+nss="kubeflow istio-system knative-serving cert-manager"
+for ns in $nss; do
+  kubectl delete ns $ns --force --grace-period=0
+  kubectl get namespace $ns -o json |jq '.spec = {"finalizers":[]}' >temp.json
+  curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$ns/finalize
+done
+kill -9 $pid
+```
+
+### Install Go tools
 
 * Install `go` following this [link](https://golang.org/dl/)
 
@@ -68,7 +270,7 @@ kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"st
   export GOPATH=$HOME/go
   ```
 
-## Build `kfctl`
+### Build `kfctl`
 
 * Clone and build `kfctl`
 
@@ -89,123 +291,7 @@ kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"st
   export PATH=$PWD/bin:$PATH
   ```
 
-## Deploy Kubeflow with `kfctl` CLI
-
-* Run the deployment with application manifests specified for IBM Cloud
-
-```shell
-cd $HOME
-mkdir kfdef
-cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm.yaml
-```
-
-* Check the deployment
-
-```shell
-kubectl get ns
-kubectl get pods -n istio-system
-kubectl get pods -n kubeflow
-```
-
-Wait until all pods and services are up and running in the `kubeflow` namespace than continue to the next steps.
-
-* Access Kubeflow dashboard
-
-  - Port forward `istio-ingressgateway`
-
-  ```shell
-  kubectl port-forward --namespace istio-system $(kubectl get pod --namespace istio-system --selector="app=istio-ingressgateway" --output jsonpath='{.items[0].metadata.name}') 8080:80&
-  ```
-
-  - Access the dashboard through `localhost:8080`
-
-  - Follow the instructions to have the profile namespace created
-
-  - Run a pipeline tutorial
-
-## Deploy Kubeflow with Kubeflow operator
-
-* Delete the current Kubeflow
-
-```shell
-cd kfdef
-kfctl delete -f kfctl_ibm.yaml
-
-kubectl delete mutatingwebhookconfigurations --all
-```
-
-* Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator
-
-```shell
-cd $GOPATH/src/github.com/kubeflow/kfctl
-export OPERATOR_NAMESPACE=operators
-kubectl create ns ${OPERATOR_NAMESPACE}
-
-cd deploy/
-kustomize edit set namespace ${OPERATOR_NAMESPACE}
-kustomize build | kubectl apply -f -
-```
-
-* Check `${OPERATOR_NAMESPACE}` for the operator
-
-```shell
-kubectl get pods -n ${OPERATOR_NAMESPACE}
-```
-
-* Deploy Kubeflow with the operator
-
-```shell
-cd $HOME/kfdef
-rm -rf .cache kustomize
-# wget https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm.yaml
-sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm.yaml
-
-KUBEFLOW_NAMESPACE=kubeflow
-kubectl create ns ${KUBEFLOW_NAMESPACE}
-kubectl create -f kfctl_ibm.yaml -n ${KUBEFLOW_NAMESPACE}
-```
-
-* Watch the progress
-
-```shell
-kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
-```
-
-## Deploy `tekton pipelines`
-
-* Install `tekton pipelines`
-
-```shell
-kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.11.3/release.yaml
-kubectl patch cm feature-flags -n tekton-pipelines \
-  -p '{"data":{"disable-home-env-overwrite":"true","disable-working-directory-overwrite":"true"}}'
-```
-
-* Install CLI follow the [instructions](https://github.com/tektoncd/cli#installing-tkn)
-
-```shell
-# on MacOS
-brew tap tektoncd/tools
-brew install tektoncd/tools/tektoncd-cli
-```
-
-* Install `tekton dashboard`
-
-```shell
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.6.1/tekton-dashboard-release.yaml
-kubectl patch svc tekton-dashboard -n tekton-pipelines --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
-```
-
-* Access `tekton dashboard`
-
-```shell
-kubectl port-forward -n tekton-pipelines svc/tekton-dashboard 9097:9097&
-```
-
-To access, from browser [`http://localhost:9097`](http://localhost:9097).
-
-## `kfctl` source code walkthrough with VSC
+### `kfctl` source code walkthrough with VSC
 
 - Install `Go` extension
 - Open the folder to `$GOPATH/src/github.com/kubeflow/kfctl`
