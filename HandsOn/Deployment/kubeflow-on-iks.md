@@ -191,19 +191,25 @@ kubectl get pods -n ${OPERATOR_NAMESPACE}
 
 ```shell
 cd $HOME/kfdef
-rm -rf .cache kustomize
-# wget https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm.yaml
-sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm.yaml
+rm -rf .cache *
+wget https://raw.githubusercontent.com/adrian555/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
 
 KUBEFLOW_NAMESPACE=kubeflow
 kubectl create ns ${KUBEFLOW_NAMESPACE}
-kubectl create -f kfctl_ibm.yaml -n ${KUBEFLOW_NAMESPACE}
+kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
 ```
 
 * Watch the progress
 
 ```shell
 kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
+```
+
+* Delete the deployment
+
+```shell
+kubectl delete -f kfctl_ibm_tekton.yaml
 ```
 
 ## Use `tekton pipelines`
