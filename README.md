@@ -33,7 +33,7 @@ Date: **Wed July 15, 2020**
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:30pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
 |2:30am - 2:45am|Break|||
-|2:45pm - 3:30pm|Tryout Kubeflow Components [Hands On tutorial](/HandsOn/day1)|Tommy|[Notebook](HandsOn/day1/README.md)|
+|2:45pm - 3:30pm|Tryout Kubeflow Components <br> [Hands On tutorial](/HandsOn/day1)|Tommy|[Notebook](HandsOn/day1/README.md)|
 |3:30pm - 4:00pm|Q&A|||
 
 Date: **Thu July 16, 2020**
