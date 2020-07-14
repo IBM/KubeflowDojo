@@ -166,6 +166,7 @@ kubectl delete -f o.yaml
 
 kfctl delete -f kfctl_ibm_tekton.yaml
 
+# manually remove some leftover webhooks
 kubectl delete mutatingwebhookconfigurations --all
 kubectl delete validatingwebhookconfigurations --all
 ```
@@ -213,6 +214,10 @@ kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
 
 ```shell
 kubectl delete -f kfctl_ibm_tekton.yaml
+
+# manually remove some leftover webhooks
+kubectl delete mutatingwebhookconfigurations --all
+kubectl delete validatingwebhookconfigurations --all
 ```
 
 ## Use `tekton pipelines`
@@ -242,9 +247,25 @@ To access, from browser [`http://localhost:9097`](http://localhost:9097).
 
 Refer to [Kubeflow on IBM Cloud](https://www.kubeflow.org/docs/ibm/install-kubeflow/) for all details.
 
-## Enable LoadBalancer for Istio-ingressgateway
+## Misc tasks
+
+### Enable LoadBalancer for Istio-ingressgateway
 
 To enable a dedicated LoadBalancer IP for Kubeflow, run:
 ```shell
 kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+### Remove namespaces stuck with finalizers
+
+```shell
+kubectl proxy&
+pid=$!
+nss="kubeflow istio-system knative-serving cert-manager"
+for ns in $nss; do
+  kubectl delete ns $ns --force --grace-period=0
+  kubectl get namespace $ns -o json |jq '.spec = {"finalizers":[]}' >temp.json
+  curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$ns/finalize
+done
+kill -9 $pid
 ```
