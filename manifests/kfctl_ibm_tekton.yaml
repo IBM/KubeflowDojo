@@ -1,8 +1,6 @@
 apiVersion: kfdef.apps.kubeflow.org/v1
 kind: KfDef
 metadata:
-  clusterName: wzhuang-dojo/bs3qq3kd0rtp1mljc5qg
-  creationTimestamp: null
   name: kftek
   namespace: kubeflow
 spec:
