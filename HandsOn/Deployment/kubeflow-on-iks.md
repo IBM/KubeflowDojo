@@ -192,7 +192,7 @@ kubectl get pods -n ${OPERATOR_NAMESPACE}
 ```shell
 cd $HOME/kfdef
 rm -rf .cache *
-wget https://raw.githubusercontent.com/adrian555/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
 sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
 
 KUBEFLOW_NAMESPACE=kubeflow
