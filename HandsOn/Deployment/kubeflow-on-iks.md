@@ -65,56 +65,22 @@ kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"sto
 kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
-## Install Go tools
+There are two approaches to deploy Kubeflow. Either through Kubeflow Operator or `kfctl` CLI. Choose one of the two options to experiment Kubeflow deployment.
 
-* Install `go` following this [link](https://golang.org/dl/)
+## 1. Kubeflow deployment through `kfctl` CLI
 
-  After install, do following to set up the environment
-  
-  ```shell
-  mkdir -p $HOME/go/src
-  export GOPATH=$HOME/go
-  ```
-
-## Install `kustomize`
-
-Follow this [link](https://kubernetes-sigs.github.io/kustomize/installation/) to install `kustomize`.
-
-On MacOS, this is one single command
-
-```shell
-brew install kustomize
-```
-
-## Install `kfctl`
+### Install `kfctl`
 
 `kfctl` can be downloaded from Kubeflow kfctl releases [link](https://github.com/kubeflow/kfctl/releases). For this workshop, the latest version should be used. Follow the instructions below to download the pre-built `kfctl` on `master` branch.
 
 ```shell
-wget 
+wget https://github.com/IBM/KubeflowDojo/raw/master/Binaries/kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
+tar zxvf kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
+chmod +x kfctl
+mv kfctl /usr/local/bin
+```
 
-## Build `kfctl`
-
-* Clone and build `kfctl`
-
-  - Clone
-
-  ```shell
-  cd $GOPATH/src
-  mkdir -p github.com/kubeflow
-  cd github.com/kubeflow
-  git clone https://github.com/kubeflow/kfctl.git
-  ```
-
-  - Build
-
-  ```shell
-  cd kfctl
-  make build
-  export PATH=$PWD/bin:$PATH
-  ```
-
-## Deploy Kubeflow with `kfctl` CLI
+### Deploy Kubeflow with `kfctl` CLI
 
 * Run the deployment with application manifests specified for IBM Cloud
 
@@ -159,7 +125,9 @@ Wait until all pods and services are up and running in the `kubeflow` namespace 
 
 Follow the instructions to have the profile namespace created and run a pipeline tutorial.
 
-## Delete the Kubeflow deployment
+### Delete the Kubeflow deployment
+
+Only do this once you are don't need this Kubeflow deployment.
 
 * Delete the current Kubeflow
 
@@ -178,9 +146,30 @@ kubectl delete mutatingwebhookconfigurations --all
 kubectl delete validatingwebhookconfigurations --all
 ```
 
-## Deploy Kubeflow with Kubeflow operator
+## 2. Kubeflow deployment through Kubeflow operator
 
-* Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator
+Follow the [instructions](https://github.com/kubeflow/kfctl/blob/master/operator.md) to deploy the Kubeflow operator. Alternatively, if clusters have access to [Operator Lifecycle Manager](https://github.com/operator-framework/operator-lifecycle-manager), the Kubeflow Operator is also available in [operatorhub.io](https://operatorhub.io/) and can be accessed in clusters' operator catalog for quick install.
+  
+### Install `kustomize`
+
+Follow this [link](https://kubernetes-sigs.github.io/kustomize/installation/) to install `kustomize`.
+
+On MacOS, this is one single command
+
+```shell
+brew install kustomize
+```
+
+### Clone `kfctl` repo
+
+```shell
+cd $GOPATH/src
+mkdir -p github.com/kubeflow
+cd github.com/kubeflow
+git clone https://github.com/kubeflow/kfctl.git
+```
+
+### Deploy Kubeflow Operator
 
 ```shell
 cd $GOPATH/src/github.com/kubeflow/kfctl
@@ -198,7 +187,7 @@ kustomize build | kubectl apply -f -
 kubectl get pods -n ${OPERATOR_NAMESPACE}
 ```
 
-* Deploy Kubeflow with the operator
+### Create Kubeflow deployment with the operator
 
 ```shell
 cd $HOME/kfdef
@@ -217,7 +206,9 @@ kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
 kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
 ```
 
-* Delete the deployment
+### Delete the Kubeflow deployment
+
+Only do this once you are don't need this Kubeflow deployment.
 
 ```shell
 kubectl delete -f kfctl_ibm_tekton.yaml
@@ -245,15 +236,6 @@ kubectl port-forward -n tekton-pipelines svc/tekton-dashboard 9097:9097&
 
 To access, from browser [`http://localhost:9097`](http://localhost:9097).
 
-## `kfctl` source code walkthrough with VSC
-
-- Install `Go` extension
-- Open the folder to `$GOPATH/src/github.com/kubeflow/kfctl`
-- Run/Debug test from the IDE
-- Debug within VSC
-
-Refer to [Kubeflow on IBM Cloud](https://www.kubeflow.org/docs/ibm/install-kubeflow/) for all details.
-
 ## Misc tasks
 
 ### Enable LoadBalancer for Istio-ingressgateway
@@ -276,3 +258,44 @@ for ns in $nss; do
 done
 kill -9 $pid
 ```
+
+### Install Go tools
+
+* Install `go` following this [link](https://golang.org/dl/)
+
+  After install, do following to set up the environment
+  
+  ```shell
+  mkdir -p $HOME/go/src
+  export GOPATH=$HOME/go
+  ```
+
+### Build `kfctl`
+
+* Clone and build `kfctl`
+
+  - Clone
+
+  ```shell
+  cd $GOPATH/src
+  mkdir -p github.com/kubeflow
+  cd github.com/kubeflow
+  git clone https://github.com/kubeflow/kfctl.git
+  ```
+
+  - Build
+
+  ```shell
+  cd kfctl
+  make build
+  export PATH=$PWD/bin:$PATH
+  ```
+
+### `kfctl` source code walkthrough with VSC
+
+- Install `Go` extension
+- Open the folder to `$GOPATH/src/github.com/kubeflow/kfctl`
+- Run/Debug test from the IDE
+- Debug within VSC
+
+Refer to [Kubeflow on IBM Cloud](https://www.kubeflow.org/docs/ibm/install-kubeflow/) for all details.
