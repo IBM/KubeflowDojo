@@ -86,6 +86,13 @@ On MacOS, this is one single command
 brew install kustomize
 ```
 
+## Install `kfctl`
+
+`kfctl` can be downloaded from Kubeflow kfctl releases [link](https://github.com/kubeflow/kfctl/releases). For this workshop, the latest version should be used. Follow the instructions below to download the pre-built `kfctl` on `master` branch.
+
+```shell
+wget 
+
 ## Build `kfctl`
 
 * Clone and build `kfctl`

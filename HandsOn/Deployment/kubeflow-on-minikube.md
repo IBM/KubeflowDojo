@@ -50,6 +50,7 @@ Note: if you are running `Docker Desktop` which may come with the option to star
   export GOPATH=$HOME/go
   ```
 
+* Download the `kfctl`
 * Clone and build `kfctl`
 
   - Clone
