@@ -238,3 +238,10 @@ To access, from browser [`http://localhost:9097`](http://localhost:9097).
 - Debug within VSC
 
 Refer to [Kubeflow on IBM Cloud](https://www.kubeflow.org/docs/ibm/install-kubeflow/) for all details.
+
+## Enable LoadBalancer for Istio-ingressgateway
+
+To enable a dedicated LoadBalancer IP for Kubeflow, run:
+```shell
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+```
