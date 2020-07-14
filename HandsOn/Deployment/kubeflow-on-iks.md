@@ -14,18 +14,9 @@ If you already have access to an IBM Cloud Kubernetes cluster, please use it for
 curl -sL https://ibm.biz/idt-installer | bash
 ```
 
-* Login to IBM Cloud
-
-```shell
-ibmcloud login -a cloud.ibm.com -r us-south -g default
-
-# if you have a federated id
-# ibmcloud login -a cloud.ibm.com -r us-south -g default --sso
-```
-
 * Request access to a workshop cluster
 
-(Optional) There are a limited number of workshop clusters for the live dojo session. If you need the access to one of the clusters, open your browser with `https://ikskubeflow.mybluemix.net`, enter `ikslab` as the lab key and your IBMid email to request a cluster ![request access](../../images/workshop-request.png).
+(Optional) There are a limited number of workshop clusters for the live dojo session. If you need the access to one of the clusters, open your browser with [`https://ikskubeflow.mybluemix.net`](https://ikskubeflow.mybluemix.net), enter `ikslab` as the lab key and your IBMid email to request a cluster ![request access](../../images/workshop-request.png).
 
 Once the request gets through, follow the `IBM Cloud account` link to view the cluster info ![cluster granted](../../images/workshop-granted.png).
 
@@ -35,6 +26,17 @@ Once the request gets through, follow the `IBM Cloud account` link to view the c
 ibmcloud ks cluster config --cluster <cluster_name/id>
 ```
 Replace the `<cluster_name/id>` with the cluster name or id provided to you.
+
+* Login to IBM Cloud
+
+```shell
+ibmcloud login -a cloud.ibm.com -r us-south -g default
+
+# if you have a federated id
+# ibmcloud login -a cloud.ibm.com -r us-south -g default --sso
+```
+
+Note: if you have multiple accounts, choose `1840867 - Advowork`.
 
 ## Set up IBM Cloud Block Storage
 
@@ -165,6 +167,7 @@ kubectl delete -f o.yaml
 kfctl delete -f kfctl_ibm_tekton.yaml
 
 kubectl delete mutatingwebhookconfigurations --all
+kubectl delete validatingwebhookconfigurations --all
 ```
 
 ## Deploy Kubeflow with Kubeflow operator
