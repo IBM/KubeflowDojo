@@ -101,7 +101,7 @@ kubectl get pods -n kubeflow
 
 Wait until all pods and services are up and running in the `kubeflow` namespace than continue to the next steps.
 
-* Access Kubeflow dashboard
+### Access Kubeflow dashboard
 
   Thereare two approaches to access the dashboard. To access the dashboard with the cluster ip, run following:
 
@@ -207,6 +207,17 @@ kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
 ```shell
 kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
 ```
+### Access Kubeflow dashboard
+
+To access the dashboard with the cluster ip, run following:
+
+  - Retrieve cluster ip
+
+  ```shell
+  export CLUSTER_IP=$(kubectl get node -o wide|grep Ready|awk '{print $7; exit}')
+  ```
+
+  Now you can access the dashboard through `http://$CLUSTER_IP:31380`.
 
 ### Delete the Kubeflow deployment
 
