@@ -190,6 +190,8 @@ kubectl get pods -n ${OPERATOR_NAMESPACE}
 ### Create Kubeflow deployment with the operator
 
 ```shell
+cd $HOME
+mkdir kfdef
 cd $HOME/kfdef
 rm -rf .cache *
 wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
