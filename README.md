@@ -25,7 +25,7 @@ Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
 |8:00am - 8:20 am|Trusted and Responsible AI through Open Source |Animesh|
-|8:20am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
+|8:20am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Slides](https://ibm.box.com/s/6px867ufg2dmuw15weoac6n8rukr7mmr)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
 |9:30am - 10:45 am|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
 |10:45am - 11:00am|Break|||
 |11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
