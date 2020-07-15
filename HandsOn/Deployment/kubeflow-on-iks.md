@@ -74,8 +74,8 @@ There are two approaches to deploy Kubeflow. Either through Kubeflow Operator or
 `kfctl` can be downloaded from Kubeflow kfctl releases [link](https://github.com/kubeflow/kfctl/releases). For this workshop, the latest version should be used. Follow the instructions below to download the pre-built `kfctl` on `master` branch.
 
 ```shell
-wget https://github.com/IBM/KubeflowDojo/raw/master/Binaries/kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
-tar zxvf kfctl_v1.1-rc.0-13-ga5b668b_$(uname).tar.gz
+wget https://github.com/IBM/KubeflowDojo/raw/master/Binaries/kfctl_v1.1-rc.0-13-ga5b668b_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
+tar zxvf kfctl_v1.1-rc.0-13-ga5b668b_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
 chmod +x kfctl
 mv kfctl /usr/local/bin
 ```
