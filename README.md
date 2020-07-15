@@ -24,8 +24,8 @@ The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitat
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
-|8:00am - 8:15 am|Data and AI OpenSouce landscape |Animesh|
-|8:15am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
+|8:00am - 8:20 am|Trusted and Responsible AI through Open Source |Animesh|
+|8:20am - 9:30am|Basics of Git and Github|Morgan Bauer|[Link](https://github.ibm.com/tmarkiewicz/git-dojo)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
 |9:30am - 10:45 am|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
 |10:45am - 11:00am|Break|||
 |11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
@@ -33,7 +33,7 @@ Date: **Wed July 15, 2020**
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:30pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
 |2:30am - 2:45am|Break|||
-|2:45pm - 3:30pm|Tryout Kubeflow Components|Tommy|[Notebook](HandsOn/day1/README.md)|
+|2:45pm - 3:30pm|Tryout Kubeflow Components |Tommy| [Hands On Notebook](/HandsOn/day1)|
 |3:30pm - 4:00pm|Q&A|||
 
 Date: **Thu July 16, 2020**
