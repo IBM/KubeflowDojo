@@ -51,7 +51,7 @@ Date: **Thu July 16, 2020**
 |9:30am - 9:45am|Break|||
 |9:45 am - 10:45am|Kubeflow Pipelines-Tekton hands on| Christian Kadner, Tommy Li|[KFP with Tekton](/HandsOn/KFP-Tekton/)|
 |10:45am - 11 am|Break|||
-|11:00am - 12 am|KFServing deep dive|Animesh, Tommy|[Slides](https://www.slideshare.net/AnimeshSingh/kfserving-serverless-model-inferencing-236725227)<br>[Video](https://youtu.be/EGDDYkeS-zc)|
+|11:00am - 12 am|KFServing deep dive|Animesh, Tommy|[Slides](https://www.slideshare.net/AnimeshSingh/kfserving-serverless-model-inferencing-236725227)<br>[Video](https://youtu.be/EGDDYkeS-zc)<br>[Demo](/demo-materials/day2-kfs/kfs.ipynb)|
 |12:00pm - 1:00pm|Lunch break|||
 |1:00pm - 2:00pm |Distributed Training and HPO Deep Dive |Andrew, Kevin, Animesh|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-distributed-training-and-hpo)<br>[Video](https://youtu.be/6GYuRy84M1o)|
 |2:00pm - 2:15pm|Break|||
