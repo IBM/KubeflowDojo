@@ -30,10 +30,10 @@ Replace the `<cluster_name/id>` with the cluster name or id provided to you.
 * Login to IBM Cloud
 
 ```shell
-ibmcloud login -a cloud.ibm.com -r us-south -g default
+ibmcloud login -a cloud.ibm.com -r us-south
 
 # if you have a federated id
-# ibmcloud login -a cloud.ibm.com -r us-south -g default --sso
+# ibmcloud login -a cloud.ibm.com -r us-south --sso
 ```
 
 Note: if you have multiple accounts, choose `1840867 - Advowork`.
