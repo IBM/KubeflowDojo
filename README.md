@@ -38,6 +38,10 @@ Date: **Wed July 15, 2020**
 |2:45pm - 3:30pm|Tryout Kubeflow Components |Tommy| [Hands On Notebook](/HandsOn/day1)|
 |3:30pm - 4:00pm|Q&A|||
 
+**Recordings for live sessions:** [https://www.youtube.com/playlist?list=PLueW2CELjTGpGV7czs41eXu3UpfXTbicz](https://www.youtube.com/playlist?list=PLueW2CELjTGpGV7czs41eXu3UpfXTbicz)
+
+<hr>
+
 Date: **Thu July 16, 2020**
 
 |Time|Topic|Presenter|Links|

@@ -65,6 +65,8 @@ kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"sto
 kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
+<hr>
+
 **There are two approaches to deploy Kubeflow. Either through Kubeflow Operator or `kfctl` CLI. Choose one of the two options to experiment Kubeflow deployment.**
 
 ## 1. Kubeflow deployment through `kfctl` CLI
