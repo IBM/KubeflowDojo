@@ -58,3 +58,5 @@ Date: **Thu July 16, 2020**
 |2:15pm - 2:30pm|Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://youtu.be/4EBQkfbbUTM)|
 |2:30pm - 3:30pm|PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)|
 |3:30pm - 4:00pm|Wrap up and final Q&A|Animesh||
+
+**Recordings for live sessions:** [https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl](https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl)
