@@ -36,10 +36,10 @@ A working Tekton cluster deployment is required to perform end-to-end tests of t
 
 ### Tekton Cluster
 
-Follow the instructions listed [here](https://github.com/tektoncd/pipeline/blob/v0.14.0/docs/install.md#installing-tekton-pipelines-on-kubernetes)
+Follow the instructions listed [here](https://github.com/tektoncd/pipeline/blob/v0.14.2/docs/install.md#installing-tekton-pipelines-on-kubernetes)
 or simply run:
 
-    kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.14.0/release.yaml
+    kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.14.2/release.yaml
 
 **Note**, if your container runtime does not support image-reference:tag@digest (like cri-o used in OpenShift 4.x),
 use `release.notags.yaml` instead.
