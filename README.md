@@ -26,19 +26,19 @@ The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitat
 Date: **Wed July 15, 2020**
 |Time|Topic|Presenter|Links|
 |---|---|---|---|
-|8:00am - 8:20 am|Trusted and Responsible AI through Open Source |Animesh|
-|8:20am - 9:30am|Basics of Git and Github|Morgan Bauer|[Slides](https://ibm.box.com/s/6px867ufg2dmuw15weoac6n8rukr7mmr)<br>[Videos](https://video.ibm.com/embed/recorded/126773542)|
-|9:30am - 10:45 am|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)|
+|8:00am - 8:20 am|Trusted and Responsible AI through Open Source |Animesh|[Video](https://www.youtube.com/watch?v=cvx6UB-S0ds)|
+|8:20am - 9:30am|Basics of Git and Github|Morgan Bauer|[Slides](https://ibm.box.com/s/6px867ufg2dmuw15weoac6n8rukr7mmr)<br>[Video](https://youtu.be/VsesQl-YYbg?list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S)|
+|9:30am - 10:45 am|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)<br>[Video](https://www.youtube.com/watch?v=TenRufHdK8o)|
 |10:45am - 11:00am|Break|||
-|11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://youtu.be/BeP5O4jEmAQ)|
-|11:30am - 12:00 pm |Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://youtu.be/rQaqJxwlpLk)|
+|11:00am - 11:30am|Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://www.youtube.com/watch?v=qfhb_RyOwAI)|
+|11:30am - 12:00 pm |Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://www.youtube.com/watch?v=VAOvXcSIGeo)|
 |12:00pm - 1:00pm|Lunch break|||
-|1:00pm - 2:30pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)|
+|1:00pm - 2:30pm|Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)<br>[Video](https://www.youtube.com/watch?v=8SrTTokXEvw)|
 |2:30am - 2:45am|Break|||
-|2:45pm - 3:30pm|Tryout Kubeflow Components |Tommy| [Hands On Notebook](/HandsOn/day1)|
+|2:45pm - 3:30pm|Tryout Kubeflow Components |Tommy| [Hands On Notebook](/HandsOn/day1)<br>[Video](https://www.youtube.com/watch?v=0UHGghi3ChA&list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S&index=7)|
 |3:30pm - 4:00pm|Q&A|||
 
-**Recordings for live sessions:** [https://www.youtube.com/playlist?list=PLueW2CELjTGpGV7czs41eXu3UpfXTbicz](https://www.youtube.com/playlist?list=PLueW2CELjTGpGV7czs41eXu3UpfXTbicz)
+**Recordings for live sessions:** [Kubeflow Dojo Day One Playlist](https://www.youtube.com/watch?v=cvx6UB-S0ds&list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S)
 
 <hr>
 
@@ -59,4 +59,4 @@ Date: **Thu July 16, 2020**
 |2:30pm - 3:30pm|PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)|
 |3:30pm - 4:00pm|Wrap up and final Q&A|Animesh||
 
-**Recordings for live sessions:** [https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl](https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl)
+**Recordings for live sessions:** [Kubeflow Dojo Day Two Playlist](https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl)
