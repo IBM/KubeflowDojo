@@ -209,6 +209,7 @@ kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
 ```shell
 kubectl logs deployment/kubeflow-operator -n ${OPERATOR_NAMESPACE} -f
 ```
+
 ### Access Kubeflow dashboard
 
 To access the dashboard with the cluster ip, run following:
