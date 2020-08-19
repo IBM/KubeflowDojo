@@ -6,7 +6,7 @@ This is only required for deployments on OpenShift clusters. OpenShift Container
 
 ### Deploy Kubeflow with Tekton pipeline
 
-Use this [KfDef configuration](./kfctl_ibm_tekton.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline. Uncomment the `openshift-scc` application in the KfDef manifest for OpenShift Container Platforms.
+Use this [KfDef configuration](./kfctl_ibm_dex_multi_user_tekton_V1.1.0.yaml) file to deploy the minimal required components for multi-user Kubeflow with Tekton pipeline. Uncomment the `openshift-scc` application in the KfDef manifest for OpenShift Container Platforms.
 
 |Application|Version|
 |---|---|
@@ -14,5 +14,3 @@ Use this [KfDef configuration](./kfctl_ibm_tekton.v1.1.0.yaml) file to deploy th
 |Kubeflow|v1.1.0|
 |Kubeflow Pipelines|v1.0.0|
 |Tektoncd|v0.14.0|
-
-Since Kubeflow central dashboard component is not part of this installation, access the Kubeflow Pipelines UI by forwarding the port on the native Kubernetes cluster or by creating a route on the OCP for the `ml-pipeline-ui` service in the `kubeflow` namespace.
