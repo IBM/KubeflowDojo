@@ -53,17 +53,27 @@ spec:
         name: manifests
         path: stacks/ibm/application/cert-manager
     name: cert-manager
-  # metadata
+  # bootstrap
   - kustomizeConfig:
       repoRef:
         name: manifests
-        path: stacks/ibm/application/metadata
-    name: metadata
+        path: stacks/ibm/application/bootstrap
+    name: bootstrap
   # kubeflow apps
   - kustomizeConfig:
       repoRef:
         name: manifests
         path: stacks/ibm/base
+    name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/profile-control-plane
+    name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/metadata
     name: kubeflow-apps
   - kustomizeConfig:
       repoRef:
@@ -75,6 +85,52 @@ spec:
         name: manifests
         path: stacks/ibm/components/kfp-tekton
     name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/notebooks
+    name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/katib
+    name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/pytorch-job
+    name: kubeflow-apps
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/components/tf-job
+    name: kubeflow-apps
+  # others:
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: metacontroller/base
+    name: metacontroller
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/application/spark-operator
+    name: spark-operator
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: knative/installs/generic
+    name: knative
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: kfserving/installs/generic
+    name: kfserving
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: stacks/ibm/application/spartakus
+    name: spartakus
   repos:
   - name: manifests
     uri: https://github.com/adrian555/manifests/archive/update-manifests-repo-link.tar.gz
