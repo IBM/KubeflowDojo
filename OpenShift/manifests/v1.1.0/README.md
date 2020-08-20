@@ -43,6 +43,10 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
 
 Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
 
+```shell
+kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/openshift/kfctl_tekton_openshift_minimal.v1.1.0.yaml
+```
+
 2. Multi-user
 
 Coming soon.
