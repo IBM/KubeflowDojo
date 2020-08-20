@@ -1,7 +1,11 @@
-## Deploy Kubeflow with Tekton pipeline
+## Deploy Kubeflow with Tekton pipeline on OpenShift Container Platform
 
 ### Prepare cluster environment
 
+* Uninstall OpenShift Pipelines
+
+  If the tech-preview OpenShift Pipelines is installed on your OpenShift Container Platform 4.3+ cluster, remove it from your cluster before process further. The version of Tektoncd used by the OpenShift Pipelines is v0.13.0. It won't work with the Kubeflow kfp-tekton project.
+  
 * Set up default StorageClass
 
   A default storageclass is required to deploy Kubeflow. To check if your cluster has a default storageclass, run
@@ -33,7 +37,28 @@
 
 ### Deploy Kubeflow with Tekton pipeline
 
-Use this [KfDef configuration](./kfctl_ibm_dex_multi_user_tekton_V1.1.0.yaml) file to deploy the required components for multi-user Kubeflow with Tekton pipeline.
+There are single-user and multi-user options to deploy Kubeflow. Choose one that works for your use case.
+
+1. Single-user
+
+Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
+
+2. Multi-user
+
+Coming soon.
+
+### Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards
+
+Run with following command to expose the dashboards.
+
+```shell
+oc expose svc ml-pipeline-ui -n kubeflow
+kfp_ui="http://"$(oc get routes -n kubeflow|grep pipeline-ui|awk '{print $2}')
+oc expose svc tekton-dashboard -n tekton-pipelines
+tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{print $2}')
+```
+
+`$kfp_ui` is the url for the Kubeflow Pipelines UI and `$tekton_ui` is the url for the Tekton Dashboard.
 
 ### Versions
 
