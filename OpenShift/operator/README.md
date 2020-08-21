@@ -83,11 +83,11 @@ EOF
 oc apply -f os.yaml
 ```
 
-### Test the operator
+### Deploy the Kubeflow
 
 From your OCP web console, you should be able to find it from the `Operators | OperatorHub` tab. Follow the [instruction](https://github.com/operator-framework/community-operators/blob/master/docs/testing-operators.md#testing-operator-deployment-on-openshift) to install and create a deployment.
 
-While creating the `Kubeflow` instance, you can choose the built-in CR example, which is the same as the v1.0.0 [manifest](../manifests/v1.0.0/kfctl_openshift.v1.0.0.yaml). You can also choose the v1.1.0 [manifest](../manifests/v1.1.0/kfctl_tekton_openshift_minimal.v1.1.0.yaml) to deploy Kubeflow with Tekton pipeline.
+While creating the `Kubeflow` instance, you can choose the built-in CR example to deploy Kubeflow with Kubeflow Pipelines. On the other hand, if you want to deploy Kubeflow with Tekton Pipelines, use this [manifest](../manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml) as the KfDef CR.
 
 **IMPORTANT* make sure to create kubeflow instance in `kubeflow` namespace.
 
