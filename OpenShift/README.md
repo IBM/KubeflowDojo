@@ -10,7 +10,7 @@ This guide describes how to deploy Kubeflow on OpenShift clusters. There are two
 
 * Deploy with the Kubeflow Operator
 
-  Kubeflow can also be deployed through the Kubeflow Operator. There are also two approaches to install the Kubeflow Operator and deploy Kubeflow, either install manually with command lines or install through OpenShift web console.
+  Kubeflow can also be deployed through the Kubeflow Operator. There are also two approaches to install the Kubeflow Operator and deploy Kubeflow, either install manually with command line or install through OpenShift web console.
   
   ***Approach #1:*** Users can follow the [Installing the Kubeflow Operator with kustomize and kubectl](https://www.kubeflow.org/docs/operator/install-operator/#2-installing-the-kubeflow-operator-with-kustomize-and-kubectl) guide on Kubeflow document website to install the operator manually. Once the operator is installed, follow the [Install Kubeflow](https://www.kubeflow.org/docs/operator/install-kubeflow/) guide to deploy Kubeflow. Users can set `KFDEF_URL` to either `https://raw.githubusercontent.com/opendatahub-io/manifests/v1.0-branch-openshift/kfdef/kfctl_openshift.yaml` for Kubeflow install with Kubeflow Pipelines or `https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml` for Kubeflow install with Tekton Pipelines.
 
