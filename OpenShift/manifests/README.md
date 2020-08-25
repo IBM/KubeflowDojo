@@ -35,21 +35,36 @@
 
   Replace `rook-ceph-block-internal` with your desired storageclass.
 
+* Download `kfctl`
+
+  Follow these steps to download the `kfctl` binary from the kfctl project's release [page](https://github.com/kubeflow/kfctl/releases/tag/v1.1.0).
+
+  ```shell
+  wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
+  tar zxvf kfctl_v1.1.0-0-g9a3621e_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
+  chmod +x kfctl
+  mv kfctl /usr/local/bin
+  ```
+
 ### Deploy Kubeflow with Tekton pipeline
 
 There are single-user and multi-user options to deploy Kubeflow. Choose one that works for your use case.
 
-1. Single-user
+* Single-user
 
-Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
+  Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
 
-```shell
-kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/v1.1.0/kfctl_tekton_openshift_minimal.v1.1.0.yaml
-```
+  ```shell
+  export KFDEF_DIR=<path_to_kfdef>
+  mkdir -p ${KFDEF_DIR}
+  cd ${KFDEF_DIR}
+  export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml
+  kfctl apply -V -f ${CONFIG_URI}
+  ```
 
-2. Multi-user
-
-Coming soon.
+* Multi-user
+  
+  Coming soon.
 
 ### Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards
 
@@ -63,12 +78,3 @@ tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{prin
 ```
 
 `$kfp_ui` is the url for the Kubeflow Pipelines UI and `$tekton_ui` is the url for the Tekton Dashboard.
-
-### Versions
-
-|Application|Version|
-|---|---|
-|KfDef configuration|kustomize v3|
-|Kubeflow|v1.1.0|
-|Kubeflow Pipelines|v1.0.0|
-|Tektoncd|v0.14.0|

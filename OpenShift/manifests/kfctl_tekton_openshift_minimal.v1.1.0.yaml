@@ -74,22 +74,12 @@ spec:
         name: manifests
         path: stacks/openshift/components/kfp-tekton
     name: kubeflow-apps
-  - kustomizeConfig:
-      repoRef:
-        name: manifests
-        path: stacks/openshift/components/notebooks
-    name: kubeflow-apps
   # others:
   - kustomizeConfig:
       repoRef:
         name: manifests
         path: metacontroller/base
     name: metacontroller
-  - kustomizeConfig:
-      repoRef:
-        name: manifests
-        path: stacks/openshift/application/spark-operator
-    name: spark-operator
   repos:
   - name: manifests
     uri: https://github.com/adrian555/manifests/archive/update-manifests-repo-link.tar.gz

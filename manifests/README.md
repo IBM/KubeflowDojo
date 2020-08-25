@@ -34,12 +34,3 @@
 ### Deploy Kubeflow with Tekton pipeline
 
 Use this [KfDef configuration](./kfctl_ibm_dex_multi_user_tekton_V1.1.0.yaml) file to deploy the required components for multi-user Kubeflow with Tekton pipeline.
-
-### Versions
-
-|Application|Version|
-|---|---|
-|KfDef configuration|kustomize v3|
-|Kubeflow|v1.1.0|
-|Kubeflow Pipelines|v1.0.0|
-|Tektoncd|v0.14.0|
