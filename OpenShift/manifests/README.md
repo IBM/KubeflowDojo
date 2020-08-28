@@ -1,10 +1,10 @@
-## Deploy Kubeflow with Tekton pipeline on OpenShift Container Platform
+## Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform
 
-### Prepare cluster environment
+### Prepare OpenShift cluster environment
 
 * Uninstall OpenShift Pipelines
 
-  If the tech-preview OpenShift Pipelines is installed on your OpenShift Container Platform 4.3+ cluster, remove it from your cluster before process further. The version of Tektoncd used by the OpenShift Pipelines is v0.13.0. It won't work with the Kubeflow kfp-tekton project.
+  If the tech-preview OpenShift Pipelines is installed on your OpenShift Container Platform 4.3+ cluster, remove it from your cluster before process further. The version of Tektoncd used by the OpenShift Pipelines is v0.13.0. It won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14
   
 * Set up default StorageClass
 
@@ -46,7 +46,7 @@
   mv kfctl /usr/local/bin
   ```
 
-### Deploy Kubeflow with Tekton pipeline
+### Deploy Kubeflow Pipelines with Tekton
 
 There are single-user and multi-user options to deploy Kubeflow. Choose one that works for your use case.
 
