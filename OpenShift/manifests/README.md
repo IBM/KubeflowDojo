@@ -52,15 +52,17 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
 
 * Single-user
 
-  Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
+  Use this [KfDef configuration](./kfctl_openshift_tekton.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
 
   ```shell
   export KFDEF_DIR=<path_to_kfdef>
   mkdir -p ${KFDEF_DIR}
   cd ${KFDEF_DIR}
-  export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml
+  export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_tekton.v1.1.0.yaml
   kfctl apply -V -f ${CONFIG_URI}
   ```
+
+Note: if you just need a minimal Kubeflow stack to run with Tekton pipeline, set `CONFIG_URI` to `https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_tekton_minimal.v1.1.0.yaml`
 
 * Multi-user
   
@@ -68,11 +70,18 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
 
 ### Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards
 
-Run with following command to expose the dashboards.
+If Kubeflow Central Dashboard is part of the installation, a route named `istio-ingressgateway` should be created in the `istio-system` namespace. Use that to access the Kubeflow Dashboard.
+
+Otherwise, run with following command to expose the Kubeflow Pipeline dashboard.
 
 ```shell
 oc expose svc ml-pipeline-ui -n kubeflow
 kfp_ui="http://"$(oc get routes -n kubeflow|grep pipeline-ui|awk '{print $2}')
+```
+
+Run with following command to expose the Tekton dashboard.
+
+```shell
 oc expose svc tekton-dashboard -n tekton-pipelines
 tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{print $2}')
 ```
