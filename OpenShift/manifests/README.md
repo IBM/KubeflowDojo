@@ -1,5 +1,11 @@
 ## Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform
 
+- [Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform](#deploy-kubeflow-pipelines-with-tekton-backend-on-openshift-container-platform)
+  - [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment)
+  - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
+  - [Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards](#set-up-routes-to-kubeflow-pipelines-and-tekton-pipelines-dashboards)
+  - [Update configmap when running with OpenShift Pipelines](#update-configmap-when-running-with-openshift-pipelines)
+
 ### Prepare OpenShift cluster environment
 
 * Install Tekton Pipelines CLI
@@ -39,7 +45,7 @@
   rook-ceph-delete-bucket-internal     ceph.rook.io/bucket             27h
   ```
 
-  The default storageclass should have the `(default)` attached to its name. To make a storageclass the default storageclass for the cluster, run
+  The default storageclass should have the **`(default)`** attached to its name. To make a storageclass the default storageclass for the cluster, run
 
   ```shell
   kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
@@ -89,7 +95,7 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
   kfctl apply -V -f ${CONFIG_URI}
   ```
 
-  Note: replace `kfctl_tekton_openshift_minimal.v1.1.0.yaml` with `kfctl_openshift_pipelines.v1.1.0.yaml` if desired.
+  Note: replace **`kfctl_tekton_openshift_minimal.v1.1.0.yaml`** with **`kfctl_openshift_pipelines.v1.1.0.yaml`** if desired.
   
 * Multi-user
   
@@ -107,3 +113,25 @@ tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{prin
 ```
 
 `$kfp_ui` is the url for the Kubeflow Pipelines UI and `$tekton_ui` is the url for the Tekton Dashboard.
+
+### Update configmap when running with OpenShift Pipelines
+
+If you choose to deploy Kubeflow Pipelines with Tekton backend using this KfDef Configuration [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml), you need to update the following configmap to support the use case where users put `$HOME` in their containers when running pipelines.
+
+```shell
+TEKTON_PIPELINES_NAMESPACE=openshift-pipelines
+cat <<EOF |oc apply -f - -n $TEKTON_PIPELINES_NAMESPACE
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: feature-flags
+data:
+  disable-affinity-assistant: "false"
+  disable-home-env-overwrite: "true"
+  disable-working-directory-overwrite: "true"
+  running-in-environment-with-injected-sidecars: "true"
+EOF
+oc rollout restart deployment/tekton-pipelines-controller -n $TEKTON_PIPELINES_NAMESPACE
+```
+
+Note: change `TEKTON_PIPELINES_NAMESPACE` to the namespace where Tekton pipelines is installed on your cluster.
