@@ -2,9 +2,30 @@
 
 ### Prepare OpenShift cluster environment
 
-* Uninstall OpenShift Pipelines
+* Install Tekton Pipelines CLI
 
-  If the tech-preview OpenShift Pipelines is installed on your OpenShift Container Platform 4.3+ cluster, remove it from your cluster before process further. The version of Tektoncd used by the OpenShift Pipelines is v0.13.0. It won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14
+  Follow this [link](https://github.com/tektoncd/cli) to install Tekton Pipelines CLI.
+
+  ```shell
+  # Get the tar.gz
+  curl -LO https://github.com/tektoncd/cli/releases/download/v0.12.0/tkn_0.12.0_$(uname -sm|awk '{print $1"_"$2}').tar.gz
+  # Extract tkn to your PATH (e.g. /usr/local/bin)
+  sudo tar xvzf tkn_0.12.0_$(uname -sm|awk '{print $1"_"$2}').tar.gz -C /usr/local/bin tkn
+  ```
+
+* Check OpenShift Pipelines
+
+  Depending on how the OpenShift Container Platform is configured and installed, the [OpenShift Pipelines](https://docs.openshift.com/container-platform/4.4/pipelines/understanding-openshift-pipelines.html) may already exist on your cluster. Or your cluster may have [Tekton Pipelines](https://github.com/tektoncd/pipeline) installed previously for other uses.
+
+  To verfiy, run
+
+  ```shell
+  tkn version
+  ```
+
+  If the `Pipeline version` in the output is `unknown` or greater than `v0.14.0`, then continue to next step.
+  
+  Otherwise, the existing version won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14.0. Remove it from your cluster before process further.
   
 * Set up default StorageClass
 
@@ -46,13 +67,19 @@
   mv kfctl /usr/local/bin
   ```
 
-### Deploy Kubeflow Pipelines with Tekton
+### Deploy Kubeflow Pipelines with Tekton backend
 
 There are single-user and multi-user options to deploy Kubeflow. Choose one that works for your use case.
 
 * Single-user
 
-  Use this [KfDef configuration](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) file to deploy the minimal required components for single-user Kubeflow with Tekton pipeline.
+  Choose one of the following KfDef configurations
+
+  1. [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml) if your cluster already has Tekton Pipelines installed, otherwise
+
+  2. [kfctl_tekton_openshift_minimal.v1.1.0.yaml](./kfctl_tekton_openshift_minimal.v1.1.0.yaml)
+
+  to deploy the minimal required components for single-user Kubeflow with Tekton backend.
 
   ```shell
   export KFDEF_DIR=<path_to_kfdef>
@@ -62,6 +89,8 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
   kfctl apply -V -f ${CONFIG_URI}
   ```
 
+  Note: replace `kfctl_tekton_openshift_minimal.v1.1.0.yaml` with `kfctl_openshift_pipelines.v1.1.0.yaml` if desired.
+  
 * Multi-user
   
   Coming soon.
