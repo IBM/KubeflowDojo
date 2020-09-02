@@ -134,4 +134,4 @@ EOF
 oc rollout restart deployment/tekton-pipelines-controller -n $TEKTON_PIPELINES_NAMESPACE
 ```
 
-Note: change `TEKTON_PIPELINES_NAMESPACE` to the namespace where Tekton pipelines is installed on your cluster.
+Note: change **`TEKTON_PIPELINES_NAMESPACE`** to the namespace where Tekton pipelines is installed on your cluster.
