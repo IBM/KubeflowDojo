@@ -1,5 +1,10 @@
 ## Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform
 
+- [Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform](#deploy-kubeflow-pipelines-with-tekton-backend-on-openshift-container-platform)
+  - [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment)
+  - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
+  - [Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards](#set-up-routes-to-kubeflow-pipelines-and-tekton-pipelines-dashboards)
+
 ### Prepare OpenShift cluster environment
 
 * Install Tekton Pipelines CLI
@@ -39,7 +44,7 @@
   rook-ceph-delete-bucket-internal     ceph.rook.io/bucket             27h
   ```
 
-  The default storageclass should have the `(default)` attached to its name. To make a storageclass the default storageclass for the cluster, run
+  The default storageclass should have the **`(default)`** attached to its name. To make a storageclass the default storageclass for the cluster, run
 
   ```shell
   kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
@@ -89,7 +94,7 @@ There are single-user and multi-user options to deploy Kubeflow. Choose one that
   kfctl apply -V -f ${CONFIG_URI}
   ```
 
-  Note: replace `kfctl_tekton_openshift_minimal.v1.1.0.yaml` with `kfctl_openshift_pipelines.v1.1.0.yaml` if desired.
+  Note: replace **`kfctl_tekton_openshift_minimal.v1.1.0.yaml`** with **`kfctl_openshift_pipelines.v1.1.0.yaml`** if desired.
   
 * Multi-user
   
