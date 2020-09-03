@@ -117,7 +117,7 @@ tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{prin
 
 ### Update configmap when running with OpenShift Pipelines
 
-If you choose to deploy Kubeflow Pipelines with Tekton backend using this KfDef Configuration [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml), you need to update the following configmap to support the use case where users put `$HOME` in their containers when running pipelines.
+If you choose to deploy Kubeflow Pipelines with Tekton backend using OpenShift Pipelines product, supported via this KfDef Configuration [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml), you need to update the following configmap to support the use cases where users use `$HOME` variable in their containers when running pipelines.
 
 ```shell
 TEKTON_PIPELINES_NAMESPACE=openshift-pipelines
