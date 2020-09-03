@@ -3,8 +3,8 @@
 - [Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform](#deploy-kubeflow-pipelines-with-tekton-backend-on-openshift-container-platform)
   - [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment)
   - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
-    - [1. Leverage OpenShift Pipelines](#1-leverage-openshift-pipelines)
-    - [2. Include Tekton Pipelines as part of deployment](#2-include-tekton-pipelines-as-part-of-deployment)
+    - [1. Leverage OpenShift Pipelines (built on Tekton)](#1-leverage-openshift-pipelines)
+    - [2. Install Tekton as part of deployment](#2-install-tekton-as-part-of-deployment)
   - [Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards](#set-up-routes-to-kubeflow-pipelines-and-tekton-pipelines-dashboards)
   - [Update configmap when running with OpenShift Pipelines](#update-configmap-when-running-with-openshift-pipelines)
 
@@ -23,7 +23,7 @@
 
 * Check OpenShift Pipelines
 
-  Depending on how the OpenShift Container Platform is configured and installed, the [OpenShift Pipelines](https://docs.openshift.com/container-platform/4.4/pipelines/understanding-openshift-pipelines.html) may already exist on your cluster. Or your cluster may have [Tekton Pipelines](https://github.com/tektoncd/pipeline) installed previously for other uses.
+  Depending on how the OpenShift Container Platform is configured and installed, the [OpenShift Pipelines](https://docs.openshift.com/container-platform/4.4/pipelines/understanding-openshift-pipelines.html) may already exist on your cluster. Or your cluster may have [Tekton Pipelines](https://github.com/tektoncd/pipeline) installed previously for other use-cases.
 
   To verfiy, run
 
@@ -31,9 +31,9 @@
   tkn version
   ```
 
-  If the `Pipeline version` in the output is `unknown` or greater than `v0.14.0`, then continue to next step.
+  If the `Pipeline version` in the output is `unknown` or >=`v0.14.0`, then continue to next step.
   
-  Otherwise, the existing version won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14.0. Remove it from your cluster before process further.
+  Otherwise, the existing version won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14.0. Remove it from your cluster before proceeding further.
   
 * Set up default StorageClass
 
@@ -53,15 +53,12 @@
   kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   ```
 
-  Replace `rook-ceph-block-internal` with your desired storageclass.
-
-  Make sure there is only one default storageclass. To unset a storageclass as default, run
+ Make sure there is only one default storageclass. To unset a storageclass as default, run
 
   ```shell
   kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
   ```
-
-  Replace `rook-ceph-block-internal` with your desired storageclass.
+ Replace `rook-ceph-block-internal` with your desired storageclass.
 
 * Download `kfctl`
 
@@ -76,7 +73,7 @@
 
 ### Deploy Kubeflow Pipelines with Tekton backend
 
-As explained in the [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment) section, your cluster may have pre-installed with OpenShift Pipelines product. Kubeflow Pipelines can leverage the OpenShift Pipelines as the Tekton backend. On the other hand, you can choose to install the Tekton Pipelines as part of the Kubeflow Pipelines deployment. Choose one of the approaches feasible to your cluster.
+As explained in the [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment) section, your cluster may have pre-installed OpenShift Pipelines product. Kubeflow Pipelines can leverage the OpenShift Pipelines as the Tekton backend. Otherwise, you can choose to install the Tekton Pipelines as part of the Kubeflow Pipelines deployment. Choose one of the approaches feasible to your cluster.
 
 #### 1. Leverage OpenShift Pipelines
 
@@ -90,7 +87,7 @@ export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/Open
 kfctl apply -V -f ${CONFIG_URI}
 ```
 
-#### 2. Include Tekton Pipelines as part of deployment
+#### 2. Install Tekton as part of deployment
 
 Choose [kfctl_tekton_openshift_minimal.v1.1.0.yaml](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) to deploy the minimal required components for single-user Kubeflow with Tekton backend. Run
 
