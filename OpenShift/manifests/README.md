@@ -3,6 +3,8 @@
 - [Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform](#deploy-kubeflow-pipelines-with-tekton-backend-on-openshift-container-platform)
   - [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment)
   - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
+    - [1. Leverage OpenShift Pipelines](#1-leverage-openshift-pipelines)
+    - [2. Include Tekton Pipelines as part of deployment](#2-include-tekton-pipelines-as-part-of-deployment)
   - [Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards](#set-up-routes-to-kubeflow-pipelines-and-tekton-pipelines-dashboards)
   - [Update configmap when running with OpenShift Pipelines](#update-configmap-when-running-with-openshift-pipelines)
 
@@ -55,7 +57,6 @@
 
   Make sure there is only one default storageclass. To unset a storageclass as default, run
 
-
   ```shell
   kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
   ```
@@ -75,31 +76,31 @@
 
 ### Deploy Kubeflow Pipelines with Tekton backend
 
-There are single-user and multi-user options to deploy Kubeflow. Choose one that works for your use case.
+As explained in the [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment) section, your cluster may have pre-installed with OpenShift Pipelines product. Kubeflow Pipelines can leverage the OpenShift Pipelines as the Tekton backend. On the other hand, you can choose to install the Tekton Pipelines as part of the Kubeflow Pipelines deployment. Choose one of the approaches feasible to your cluster.
 
-* Single-user
+#### 1. Leverage OpenShift Pipelines
 
-  Choose one of the following KfDef configurations
+Choose [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml) to deploy the minimal required components for single-user Kubeflow with Tekton backend. Run
 
-  1. [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml) if your cluster already has Tekton Pipelines installed, otherwise
+```shell
+export KFDEF_DIR=<path_to_kfdef>
+mkdir -p ${KFDEF_DIR}
+cd ${KFDEF_DIR}
+export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_pipelines.v1.1.0.yaml
+kfctl apply -V -f ${CONFIG_URI}
+```
 
-  2. [kfctl_tekton_openshift_minimal.v1.1.0.yaml](./kfctl_tekton_openshift_minimal.v1.1.0.yaml)
+#### 2. Include Tekton Pipelines as part of deployment
 
-  to deploy the minimal required components for single-user Kubeflow with Tekton backend.
+Choose [kfctl_tekton_openshift_minimal.v1.1.0.yaml](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) to deploy the minimal required components for single-user Kubeflow with Tekton backend. Run
 
-  ```shell
-  export KFDEF_DIR=<path_to_kfdef>
-  mkdir -p ${KFDEF_DIR}
-  cd ${KFDEF_DIR}
-  export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml
-  kfctl apply -V -f ${CONFIG_URI}
-  ```
-
-  Note: replace **`kfctl_tekton_openshift_minimal.v1.1.0.yaml`** with **`kfctl_openshift_pipelines.v1.1.0.yaml`** if desired.
-  
-* Multi-user
-  
-  Coming soon.
+```shell
+export KFDEF_DIR=<path_to_kfdef>
+mkdir -p ${KFDEF_DIR}
+cd ${KFDEF_DIR}
+export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml
+kfctl apply -V -f ${CONFIG_URI}
+```
 
 ### Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards
 
