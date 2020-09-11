@@ -6,7 +6,7 @@ This guide describes how to deploy Kubeflow on OpenShift clusters. There are two
 
   For users who want to install the latest supported Kubeflow on Openshift, follow the [Kubeflow on OpenShift](https://www.kubeflow.org/docs/openshift/) guide on Kubeflow document website. This will install Kubeflow with Kubeflow [Pipelines](https://github.com/kubeflow/pipelines).
 
-  For users who rather want to run [Kubeflow Pipelines with Tekton backend](https://github.com/kubeflow/kfp-tekton), a KfDef configuration file is provided in [manifests](manifests) directory. Users should follow the install instructions in this [link](manifests/README.md) to deploy Kubeflow.
+  For users who rather want to run [Kubeflow Pipelines with Tekton](https://github.com/kubeflow/kfp-tekton), a KfDef configuration file is provided in [manifests](manifests) directory. Users should follow the [KFP-Tekton install instructions on OpenShift in this link](manifests/README.md) to deploy.
 
 * Deploy with the Kubeflow Operator
 
