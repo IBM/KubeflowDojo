@@ -1,9 +1,8 @@
 # Kubeflow Deployment on OpenShift Container Platform
 
-- [Kubeflow Deployment on OpenShift Container Platform](#kubeflow-deployment-on-openshift-container-platform)
   - [Deploy Kubeflow](#deploy-kubeflow)
-    - [1. Deploy with `kfctl` CLI](#1-deploy-with-kfctl-cli)
-    - [2. Deploy with the Kubeflow Operator](#2-deploy-with-the-kubeflow-operator)
+    - [Deploy with `kfctl` CLI](#1-deploy-with-kfctl-cli)
+    - [Deploy with the Kubeflow Operator](#2-deploy-with-the-kubeflow-operator)
   - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
   - [Deploy Kubeflow with Knative and KFServing](#deploy-kubeflow-with-knative-and-kfserving)
 
@@ -25,7 +24,7 @@ This guide describes how to deploy Kubeflow on OpenShift clusters. There are two
 
 ## Deploy Kubeflow Pipelines with Tekton backend
 
-  For users who want to run [Kubeflow Pipelines with Tekton](https://github.com/kubeflow/kfp-tekton), KfDef configuration files are provided in [manifests](manifests) directory. Users should follow the [KFP-Tekton install instructions on OpenShift in this link](manifests/README.md) to deploy.
+  For users who want to run [Kubeflow Pipelines with Tekton](https://github.com/kubeflow/kfp-tekton), KfDef configuration files are provided in manifests directory. Users should follow the [KFP-Tekton on OpenShift install guide](manifests/README.md) to deploy.
 
 ## Deploy Kubeflow with Knative and KFServing
 
