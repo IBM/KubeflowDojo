@@ -40,7 +40,7 @@ Note: if you have multiple accounts, choose `1840867 - Advowork`.
 
 ## Set up IBM Cloud Block Storage
 
-* Install `Helm` with these [instructions](https://helm.sh/docs/intro/install/)
+* Install `Helm 3` with these [instructions](https://helm.sh/docs/intro/install/)
 
 ```shell
 # on MacOS
@@ -55,14 +55,16 @@ helm repo add iks-charts https://icr.io/helm/iks-charts
 helm repo update
 
 # install
-helm install 1.6.0 iks-charts/ibmcloud-block-storage-plugin -n kube-system
+helm install 1.7.0 iks-charts/ibmcloud-block-storage-plugin -n kube-system
 ```
 
 * Make the IBM Cloud Block Storage the default `storageclass`
 
 ```shell
-kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+NEW_STORAGE_CLASS=ibmc-block-gold
+OLD_STORAGE_CLASS=$(kubectl get sc -o jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io\/is-default-class=="true")].metadata.name}')
+kubectl patch storageclass ${NEW_STORAGE_CLASS} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageclass ${OLD_STORAGE_CLASS} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
 <hr>
