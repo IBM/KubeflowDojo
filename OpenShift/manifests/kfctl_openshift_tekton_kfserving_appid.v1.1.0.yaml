@@ -29,7 +29,7 @@ spec:
   - kustomizeConfig:
       repoRef:
         name: manifests
-        path: stacks/ibm/application/oidc-authservice-for-appid
+        path: stacks/openshift/application/oidc-authservice-for-appid
     name: oidc-authservice
   # application
   - kustomizeConfig:
@@ -130,5 +130,5 @@ spec:
     name: kfserving
   repos:
   - name: manifests
-    uri: https://github.com/adrian555/manifests/archive/update-manifests-repo-link.tar.gz
+    uri: https://github.com/IBM/manifests/archive/master.tar.gz
   version: master
