@@ -29,8 +29,8 @@ spec:
   - kustomizeConfig:
       repoRef:
         name: manifests
-        path: stacks/openshift/application/add-anonymous-user-filter
-    name: add-anonymous-user-filter
+        path: stacks/ibm/application/oidc-authservice-for-appid
+    name: oidc-authservice
   # application
   - kustomizeConfig:
       repoRef:
