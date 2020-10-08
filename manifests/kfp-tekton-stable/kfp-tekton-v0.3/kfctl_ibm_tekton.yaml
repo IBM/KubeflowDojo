@@ -96,5 +96,5 @@ spec:
     name: spartakus
   repos:
   - name: manifests
-    uri: https://github.com/IBM/manifests/archive/master.tar.gz
+    uri: https://github.com/IBM/manifests/archive/kfp-tekton-0.3.tar.gz
   version: master

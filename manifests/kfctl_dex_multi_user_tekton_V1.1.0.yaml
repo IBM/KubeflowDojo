@@ -9,8 +9,6 @@ spec:
         name: manifests
         path: namespaces/base
     name: namespaces
-  # Install istio in a different namespace: istio-system
-  # Remove this application if istio is already installed
   - kustomizeConfig:
       repoRef:
         name: manifests
@@ -76,7 +74,6 @@ spec:
         name: manifests
         path: tektoncd/tektoncd-dashboard/base
     name: tektoncd-dashboard
-  # Install kubeflow applications.
   - kustomizeConfig:
       repoRef:
         name: manifests
@@ -104,5 +101,5 @@ spec:
     name: spartakus
   repos:
   - name: manifests
-    uri: https://github.com/tomcli/manifests/archive/kubeflow-tekton.tar.gz
+    uri: https://github.com/IBM/manifests/archive/master.tar.gz
   version: master
