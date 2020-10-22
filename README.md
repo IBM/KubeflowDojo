@@ -3,7 +3,7 @@ Repository to hold code, instructions, demos and pointers to presentation assets
 
 To enable developers who want to use it at their own pace, pre-recorded sessions are uploaded. For those who prefer live interactions, we will be running the sessions and workshops live.
 
-Read about [IBM's journey with Kuebflow here](https://developer.ibm.com/blogs/kubeflow-and-ibm-an-open-source-journey-to-10/)
+Read about [IBM's journey with Kubeflow here](https://developer.ibm.com/blogs/kubeflow-and-ibm-an-open-source-journey-to-10/)
 
 ![kubeflow-dojo](images/kubeflow-dojo.png)
 
