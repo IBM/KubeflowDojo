@@ -29,7 +29,7 @@ Trusted and Responsible AI through Open Source |Animesh|[Video](https://www.yout
 |Basics of Git and Github|Morgan Bauer|[Slides](https://ibm.box.com/s/6px867ufg2dmuw15weoac6n8rukr7mmr)<br>[Video](https://youtu.be/VsesQl-YYbg?list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S)|
 |Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)<br>[Video](https://www.youtube.com/watch?v=TenRufHdK8o)|
 |Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://www.youtube.com/watch?v=qfhb_RyOwAI)|
-|Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://www.youtube.com/watch?v=VAOvXcSIGeo)|
+|Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://www.youtube.com/watch?v=VAOvXcSIGeo)<br>[中文PPT](https://www.slideshare.net/squarevilla/kubeflow-control-plane-238926180)<br>[中文视频](https://youtu.be/EP16OAlAo6A)|
 |Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)<br>[Video](https://www.youtube.com/watch?v=8SrTTokXEvw)|
 |Tryout Kubeflow Components |Tommy| [Hands On Notebook](/HandsOn/day1)<br>[Video](https://www.youtube.com/watch?v=0UHGghi3ChA&list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S&index=7)|
 |
