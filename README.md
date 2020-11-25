@@ -27,7 +27,7 @@ Date: **Day One**
 |---|---|---|
 Trusted and Responsible AI through Open Source |Animesh|[Video](https://www.youtube.com/watch?v=cvx6UB-S0ds)|
 |Basics of Git and Github|Morgan Bauer|[Slides](https://ibm.box.com/s/6px867ufg2dmuw15weoac6n8rukr7mmr)<br>[Video](https://youtu.be/VsesQl-YYbg?list=PLmzRWLV1CK_wzDbhB95nImDyaiNrrOg8S)|
-|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)<br>[Video](https://www.youtube.com/watch?v=TenRufHdK8o)|
+|Kubeflow - End to end ML on Kubernetes|Animesh|[Kubeflow End to End](https://www.slideshare.net/AnimeshSingh/end-to-end-machine-learning-using-kubeflowbuild-train-deploy-and-manage)<br>[Video](https://www.youtube.com/watch?v=TenRufHdK8o)<br>[中文字幕视频](https://www.bilibili.com/video/BV1mV411m7h7)|
 |Kubeflow Development Environment|Weiqiang|[Slides](Presentations/DevEnv.pdf)<br>[Video](https://www.youtube.com/watch?v=qfhb_RyOwAI)|
 |Kubeflow Control Plane deep dive|Weiqiang|[Slides](Presentations/KubeflowControlPlane.pdf)<br>[Video](https://www.youtube.com/watch?v=VAOvXcSIGeo)<br>[中文PPT](https://www.slideshare.net/squarevilla/kubeflow-control-plane-238926180)<br>[中文视频](https://youtu.be/EP16OAlAo6A)|
 |Kubeflow Deployment Hands On|Weiqiang, Shawn, Tommy|[Deployment on IKS](HandsOn/Deployment/kubeflow-on-iks.md)<br>[Deployment on minikube](HandsOn/Deployment/kubeflow-on-minikube.md)<br>[Video](https://www.youtube.com/watch?v=8SrTTokXEvw)|
@@ -45,8 +45,8 @@ Date: **Day Two**
 |Overview of Kubeflow repos|Tommy|[Slides](Presentations/KubeflowRepos.pdf)<br>[Video](https://www.youtube.com/watch?v=nnyj1-q628g&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=2&t=0s)|
 |Kubeflow Pipelines deep dive|Animesh, Tommy, Christian|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-pipelines-with-tekton-236769976)<br>[Video](https://www.youtube.com/watch?v=AYIeNtXLT_k&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=2)|
 |Kubeflow Pipelines-Tekton hands on| Christian Kadner, Tommy Li|[KFP with Tekton](/HandsOn/KFP-Tekton/)<br>[Video](https://www.youtube.com/watch?v=Eg3Cm39MHZc&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=3)|
-|KFServing deep dive|Animesh, Tommy|[Slides](https://www.slideshare.net/AnimeshSingh/kfserving-serverless-model-inferencing-236725227)<br>[Video](https://www.youtube.com/watch?v=VN2htoRSUzY&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=4)<br>[Demo](/demo-materials/day2-kfs)|
-|Distributed Training and HPO Deep Dive |Andrew, Kevin, Animesh|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-distributed-training-and-hpo)<br>[Video](https://www.youtube.com/watch?v=KJFOlhD3L1E&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=5)|
+|KFServing deep dive|Animesh, Tommy|[Slides](https://www.slideshare.net/AnimeshSingh/kfserving-serverless-model-inferencing-236725227)<br>[Video](https://www.youtube.com/watch?v=VN2htoRSUzY&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=4)<br>[中文视频](https://www.bilibili.com/video/BV1ap4y1k7U6)<br>[Demo](/demo-materials/day2-kfs)|
+|Distributed Training and HPO Deep Dive |Andrew, Kevin, Animesh|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-distributed-training-and-hpo)<br>[Video](https://www.youtube.com/watch?v=KJFOlhD3L1E&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=5)<br>[中文视频](https://www.bilibili.com/video/BV19Z4y13788)|
 |Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://youtu.be/4EBQkfbbUTM)|
 |PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)<br>[Video](https://www.youtube.com/watch?v=glTvpq6hu5w&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=6)|
 
