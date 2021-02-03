@@ -29,3 +29,7 @@ This guide describes how to deploy Kubeflow on OpenShift clusters. There are two
 ## Deploy Kubeflow with Knative and KFServing
 
   For users who want to run KFserving service along with Kubeflow on OpenShift clusters, follow the [KfServing on OpenShift](manifests/README-kfserving.md) guide to deploy.
+
+## Multi-tenant Kubeflow on OpenShift with IBM Cloud AppID
+
+  For users who want to run KFserving service along with Multi-tenant Kubeflow on OpenShift clusters, follow the [Multi-tenant Kubeflow on OpenShift with IBM Cloud AppID](manifests/README-appid.md) guide to deploy.
