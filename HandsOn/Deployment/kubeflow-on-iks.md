@@ -78,8 +78,8 @@ kubectl patch storageclass ${OLD_STORAGE_CLASS} -p '{"metadata": {"annotations":
 `kfctl` can be downloaded from Kubeflow kfctl releases [link](https://github.com/kubeflow/kfctl/releases). For this workshop, the latest version should be used. Follow the instructions below to download the pre-built `kfctl` on `master` branch.
 
 ```shell
-wget https://github.com/IBM/KubeflowDojo/raw/master/Binaries/kfctl_v1.1-rc.0-13-ga5b668b_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
-tar zxvf kfctl_v1.1-rc.0-13-ga5b668b_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
+wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
+tar zxvf kfctl_v1.2.0-0-gbc038f9_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
 chmod +x kfctl
 mv kfctl /usr/local/bin
 ```
@@ -92,7 +92,7 @@ mv kfctl /usr/local/bin
 cd $HOME
 mkdir kfdef
 cd kfdef
-kfctl apply -V -f https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
+kfctl apply -V -f https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_ibm.yaml
 ```
 
 * Check the deployment
@@ -143,7 +143,7 @@ wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kustomi
 kustomize build --load_restrictor=none . >o.yaml
 kubectl delete -f o.yaml
 
-kfctl delete -f kfctl_ibm_tekton.yaml
+kfctl delete -f kfctl_ibm.yaml
 
 # manually remove some leftover webhooks
 kubectl delete mutatingwebhookconfigurations --all
@@ -173,7 +173,7 @@ cd github.com/kubeflow
 git clone https://github.com/kubeflow/kfctl.git
 ```
 
-### Deploy Kubeflow Operator
+### Deploy Kubeflow Operator 
 
 ```shell
 cd $GOPATH/src/github.com/kubeflow/kfctl
@@ -198,12 +198,12 @@ cd $HOME
 mkdir kfdef
 cd $HOME/kfdef
 rm -rf .cache *
-wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm_tekton.yaml
-sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm_tekton.yaml
+wget https://raw.githubusercontent.com/IBM/KubeflowDojo/master/manifests/kfctl_ibm.yaml
+sed -i '' '/metadata:/a\'$'\n\  ''name: kubeflow\'$'\n' kfctl_ibm.yaml
 
 KUBEFLOW_NAMESPACE=kubeflow
 kubectl create ns ${KUBEFLOW_NAMESPACE}
-kubectl create -f kfctl_ibm_tekton.yaml -n ${KUBEFLOW_NAMESPACE}
+kubectl create -f kfctl_ibm.yaml -n ${KUBEFLOW_NAMESPACE}
 ```
 
 * Watch the progress
@@ -229,7 +229,7 @@ To access the dashboard with the cluster ip, run following:
 Only do this once you are don't need this Kubeflow deployment.
 
 ```shell
-kubectl delete -f kfctl_ibm_tekton.yaml
+kubectl delete -f kfctl_ibm.yaml
 
 # manually remove some leftover webhooks
 kubectl delete mutatingwebhookconfigurations --all
