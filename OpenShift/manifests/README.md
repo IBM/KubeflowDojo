@@ -81,7 +81,7 @@ configuration parameters from your AppID:
 
     ```shell
     export CONFIG_FILE=kfctl_ibm_multi_user.yaml
-    export CONFIG_URI="https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_multu.v1.3.0.yaml"
+    export CONFIG_URI="https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_multi.v1.3.0.yaml"
     # Generate and deploy Kubeflow:
     mkdir -p ${KF_DIR}
     cd ${KF_DIR}
