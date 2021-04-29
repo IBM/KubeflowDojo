@@ -1,135 +1,189 @@
-## Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform
+This guide describes how to use the kfctl binary to deploy Kubeflow on IBM Cloud Kubernetes Service (IKS).
 
-- [Deploy Kubeflow Pipelines with Tekton backend on OpenShift Container Platform](#deploy-kubeflow-pipelines-with-tekton-backend-on-openshift-container-platform)
-  - [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment)
-  - [Deploy Kubeflow Pipelines with Tekton backend](#deploy-kubeflow-pipelines-with-tekton-backend)
-    - [1. Leverage OpenShift Pipelines (built on Tekton)](#1-leverage-openshift-pipelines)
-    - [2. Install Tekton as part of deployment](#2-install-tekton-as-part-of-deployment)
-  - [Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards](#set-up-routes-to-kubeflow-pipelines-and-tekton-pipelines-dashboards)
-  - [Update configmap when running with OpenShift Pipelines](#update-configmap-when-running-with-openshift-pipelines)
+## Prerequisites
 
-### Prepare OpenShift cluster environment
+* Authenticate with IBM Cloud
 
-* Install Tekton Pipelines CLI
+  Log into IBM Cloud at [IBM Cloud](https://cloud.ibm.com)
 
-  Follow this [link](https://github.com/tektoncd/cli) to install Tekton Pipelines CLI.
+* Install OpenShift CLI
 
-  ```shell
-  # Get the tar.gz
-  curl -LO https://github.com/tektoncd/cli/releases/download/v0.12.0/tkn_0.12.0_$(uname -sm|awk '{print $1"_"$2}').tar.gz
-  # Extract tkn to your PATH (e.g. /usr/local/bin)
-  sudo tar xvzf tkn_0.12.0_$(uname -sm|awk '{print $1"_"$2}').tar.gz -C /usr/local/bin tkn
-  ```
+  OpenShift CLI is the way to manage and access OpenShift cluster. You can [Install OpenShift CLI](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli) from this instructions.
 
-* Check OpenShift Pipelines
+* Create and access a OpenShift cluster on IKS
 
-  Depending on how the OpenShift Container Platform is configured and installed, the [OpenShift Pipelines](https://docs.openshift.com/container-platform/4.4/pipelines/understanding-openshift-pipelines.html) may already exist on your cluster. Or your cluster may have [Tekton Pipelines](https://github.com/tektoncd/pipeline) installed previously for other use-cases.
+  To deploy Kubeflow on IBM Cloud, you need a cluster running OpenShift on IKS. If you don't have a cluster running, follow the [Create an IBM Cloud OpenShift cluster](https://cloud.ibm.com/docs/openshift?topic=openshift-clusters) guide.
 
-  To verfiy, run
+  To access the cluster follow these directions [Access OpenShift Cluster](https://cloud.ibm.com/docs/openshift?topic=openshift-access_cluster). We can easily get access from the openshift console on IBM Cloud[Connecting to the cluster from the console](https://cloud.ibm.com/docs/openshift?topic=openshift-access_cluster#access_oc_console).
 
-  ```shell
-  tkn version
-  ```
+## Hardware Requirement
 
-  If the `Pipeline version` in the output is `unknown` or >=`v0.14.0`, then continue to next step.
+We have tested this on OpenShift 4.5 and 4.6. We have plans for testing on OpenShift 4.7 but given its not yet generally available on IBM Cloud this may take some time. 
+
+For installing kubeflow we recommend using a `4 x 16 x 3` cluster. But for kubeflow for multiuser the for more the 3 person you might hit cpu limit. To avoid that you should deploy machines with more cpu. `8 x 16 x 2` is a good option. 
+# Installation
+
+## Single User
+
+Use the [official kubeflow docs for openshift](https://www.kubeflow.org/docs/distributions/openshift/install-kubeflow/) for single user kubeflow 1.3 installation.
+## Multi-user, auth-enabled
+
+Run the following steps to deploy Kubeflow with [IBM Cloud AppID](https://cloud.ibm.com/catalog/services/app-id)
+as an authentication provider. 
+
+The scenario is a Kubeflow cluster admin configures Kubeflow as a web
+application in AppID and manages user authentication with builtin identity
+providers (Cloud Directory, SAML, social log-in with Google or Facebook etc.) or
+custom providers.
+
+### Prerequisites
+
+For authentication,  IBM Cloud uses [AppID](https://cloud.ibm.com/catalog/services/app-id)
+
+1. Follow the [Creating an App ID service instance on IBM Cloud](https://cloud.ibm.com/catalog/services/app-id) guide to learn about Kubeflow authentication. 
+You can also learn [how to use App ID](https://cloud.ibm.com/docs/appid?topic=appid-getting-started) with different authentication methods.
+
+2. Follow the [Registering your app](https://cloud.ibm.com/docs/appid?topic=appid-app#app-register) section of the App ID guide
+to create an application with type _regularwebapp_ under the provisioned AppID
+instance. Make sure the _scope_ contains _email_. Then retrieve the following
+configuration parameters from your AppID:
+    * `clientId`
+    * `secret`
+    * `oAuthServerUrl`
+
+    You will be using these information in the subsequent sections.  
   
-  Otherwise, the existing version won't work with the Kubeflow kfp-tekton project, which requires a minimum Tekton version of v0.14.0. Remove it from your cluster before proceeding further.
+3. Register the Kubeflow OIDC redirect page. The Kubeflow `REDIRECT_URL` URL is `http://<kubeflow-FQDN>/login/oidc`. 
+`<kubeflow-FQDN>` is the endpoint for accessing Kubeflow. In openshift we setup a route for our `istio-ingresgateway`. 
+
+1. Then, you need to place the Kubeflow OIDC `REDIRECT_URL` under **Manage Authentication** > **Authentication settings** > **Add web redirect URLs**.
   
-* Set up default StorageClass
+<img src="../../images/appid-redirect-settings.png" 
+  alt="APP ID Redirect Settings"
+  class="mt-3 mb-3 border border-info rounded">
 
-  A default storageclass is required to deploy Kubeflow. To check if your cluster has a default storageclass, run
+### Using kfctl
 
-  ```shell
-  oc get storageclass
-  NAME                                 PROVISIONER                     AGE
-  rook-ceph-block-internal (default)   rook-ceph.rbd.csi.ceph.com      27h
-  rook-ceph-cephfs-internal            rook-ceph.cephfs.csi.ceph.com   27h
-  rook-ceph-delete-bucket-internal     ceph.rook.io/bucket             27h
-  ```
+1. Set up environment variables:
 
-  The default storageclass should have the **`(default)`** attached to its name. To make a storageclass the default storageclass for the cluster, run
+    ```shell
+    export KF_NAME=<your choice of name for the Kubeflow deployment>
 
-  ```shell
-  kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-  ```
+    # Set the path to the base directory where you want to store one or more 
+    # Kubeflow deployments. For example, use `/opt/`.
+    export BASE_DIR=<path to a base directory>
 
- Make sure there is only one default storageclass. To unset a storageclass as default, run
+    # Then set the Kubeflow application directory for this deployment.
+    export KF_DIR=${BASE_DIR}/${KF_NAME}
+    ```
 
-  ```shell
-  kubectl patch storageclass rook-ceph-block-internal -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-  ```
- Replace `rook-ceph-block-internal` with your desired storageclass.
+2. Set up configuration files:
 
-* Download `kfctl`
+    ```shell
+    export CONFIG_FILE=kfctl_ibm_multi_user.yaml
+    export CONFIG_URI="https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_multu.v1.3.0.yaml"
+    # Generate and deploy Kubeflow:
+    mkdir -p ${KF_DIR}
+    cd ${KF_DIR}
+    curl -L ${CONFIG_URI} > ${CONFIG_FILE}
+    ```
+    
+> **Note**: By default, the IBM configuration is using the [Kubeflow pipeline with the Tekton backend](https://github.com/kubeflow/kfp-tekton#kubeflow-pipelines-with-tekton).
+If you want to use the Kubeflow pipeline with the Argo backend, modify and uncomment the `kfp-argo` applications inside the `kfctl_ibm_multi_user.yaml` and remove the `kfp-tekton` applications. 
 
-  Follow these steps to download the `kfctl` binary from the kfctl project's release [page](https://github.com/kubeflow/kfctl/releases/tag/v1.1.0).
+> There are components that are strictly required for using kubeflow. Like `pytorch` or `xgboost` you can comment these applications out from your `kfdef` file.
+    
+1. Deploy Kubeflow:
 
-  ```shell
-  wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
-  tar zxvf kfctl_v1.1.0-0-g9a3621e_$(uname | tr '[:upper:]' '[:lower:]').tar.gz
-  chmod +x kfctl
-  mv kfctl /usr/local/bin
-  ```
+    ```shell
+    kfctl apply -V -f ${CONFIG_FILE}
+    ```
 
-### Deploy Kubeflow Pipelines with Tekton backend
+2. Wait until the deployment finishes successfully — for example, all pods should be in the `Running` state when you run the command:
 
-As explained in the [Prepare OpenShift cluster environment](#prepare-openshift-cluster-environment) section, your cluster may have pre-installed OpenShift Pipelines product. Kubeflow Pipelines can leverage the OpenShift Pipelines as the Tekton backend. Otherwise, you can choose to install the Tekton Pipelines as part of the Kubeflow Pipelines deployment. Choose one of the approaches feasible to your cluster.
+    ```shell
+    kubectl get pod -n kubeflow
+    ```
 
-#### 1. Leverage OpenShift Pipelines
+3. Update the configmap `oidc-authservice-parameters` and secret `oidc-authservice-client` in the `istio-system` namespace that holds the information needed by the `authservice`.
 
-Choose [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml) to deploy the minimal required components for single-user Kubeflow with Tekton backend. Run
+We will be updating these to match our `appid` service created in the [Prereq](#prerequisites) step. 
 
-```shell
-export KFDEF_DIR=<path_to_kfdef>
-mkdir -p ${KFDEF_DIR}
-cd ${KFDEF_DIR}
-export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_openshift_pipelines.v1.1.0.yaml
-kfctl apply -V -f ${CONFIG_URI}
+You will need the following values:
+
+
+ * `<oAuthServerUrl>` - fill in the value of oAuthServerUrl
+ * `<clientId>` - fill in the value of clientId
+ * `<secret>` - fill in the value of secret
+ * `<kubeflow-FQDN>` - fill in the FQDN of Kubeflow, if you don't know yet, just give a dummy one like `localhost`. Then change it after you got one.
+
+##### Patch ConfigMap
+
+Get the route to your `istio-ingresgateway`. That is the `<kubeflow-fqdn>`.
+Once we have the application up we can get the route using:
+
+```bash
+oc get route -n istio-system istio-ingressgateway -o=jsonpath='{.spec.host}'
 ```
 
-#### 2. Install Tekton as part of deployment
+```bash
+export OIDC_PROVIDER=<oAuthServerUrl>
+export OIDC_AUTH_URL=<oAuthServerUrl>/authorization
+export REDIRECT_URL=http://<kubeflow-fqdn>/login/oidc
 
-Choose [kfctl_tekton_openshift_minimal.v1.1.0.yaml](./kfctl_tekton_openshift_minimal.v1.1.0.yaml) to deploy the minimal required components for single-user Kubeflow with Tekton backend. Run
+export PATCH=$(printf '{"data": {"OIDC_AUTH_URL": "%s", "OIDC_PROVIDER": "%s", "REDIRECT_URL": "%s"}}' $OIDC_AUTH_URL $OIDC_PROVIDER $REDIRECT_URL)
 
-```shell
-export KFDEF_DIR=<path_to_kfdef>
-mkdir -p ${KFDEF_DIR}
-cd ${KFDEF_DIR}
-export CONFIG_URI=https://raw.githubusercontent.com/IBM/KubeflowDojo/master/OpenShift/manifests/kfctl_tekton_openshift_minimal.v1.1.0.yaml
-kfctl apply -V -f ${CONFIG_URI}
+kubectl patch cm -n istio-system oidc-authservice-parameters -p=$PATCH
 ```
 
-### Set up routes to Kubeflow Pipelines and Tekton Pipelines dashboards
+##### Patch Secret
 
-Run with following command to expose the dashboards.
+```bash
+export CLIENT_ID=<clientId>
+export CLIENT_SECRET=<secret>
 
-```shell
-oc expose svc ml-pipeline-ui -n kubeflow
-kfp_ui="http://"$(oc get routes -n kubeflow|grep pipeline-ui|awk '{print $2}')
-oc expose svc tekton-dashboard -n tekton-pipelines
-tekton_ui="http://"$(oc get routes -n tekton-pipelines|grep dashboard|awk '{print $2}')
+export PATCH=$(printf '{"stringData": {"CLIENT_ID": "%s", "CLIENT_SECRET": "%s"}}' $CLIENT_ID $CLIENT_SECRET)
+
+kubectl patch secret -n istio-system oidc-authservice-client -p=$PATCH
 ```
+ 
+ **Note**: If any of the parameters are changed after the initial Kubeflow deployment, you 
+ will need to manually update these parameters in the configmap `oidc-authservice-parameters` and/or secret `oidc-authservice-client`.
+ Then, restart authservice by deleting the existing pod `kubectl delete po -n istio-system authservice-0 `.
 
-`$kfp_ui` is the url for the Kubeflow Pipelines UI and `$tekton_ui` is the url for the Tekton Dashboard.
+## Accessing our cluster
 
-### Update configmap when running with OpenShift Pipelines
+Once the `oauthservice` is up and properly configured we can visit `<kubeflow-fqdn` to access our application. Make sure to add `http://` infront of the url since we have not setup `https://` yet. 
 
-If you choose to deploy Kubeflow Pipelines with Tekton backend using OpenShift Pipelines product, supported via this KfDef Configuration [kfctl_openshift_pipelines.v1.1.0.yaml](./kfctl_openshift_pipelines.v1.1.0.yaml), you need to update the following configmap to support the use cases where users use `$HOME` variable in their containers when running pipelines.
+If everything is setup correctly we should be redirected to `appid` login page to sign in.
 
-```shell
-TEKTON_PIPELINES_NAMESPACE=openshift-pipelines
-cat <<EOF |oc apply -f - -n $TEKTON_PIPELINES_NAMESPACE
-apiVersion: v1
-kind: ConfigMap
+## Profile Creation Caveats
+
+We have automatic profile creation enabled. But at this moment we do not have a way to create the permissions and resources needed for the new namespace. To enable the new namespace to function properly we need to run some additional commands. 
+
+```bash
+export TARGET_NAMESPACE=<target-namespace> #the namespace created for the new profile
+
+cat <<EOF | oc create -f -
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
 metadata:
-  name: feature-flags
-data:
-  disable-affinity-assistant: "false"
-  disable-home-env-overwrite: "true"
-  disable-working-directory-overwrite: "true"
-  running-in-environment-with-injected-sidecars: "true"
+  name: istio-cni
+  namespace: $TARGET_NAMESPACE
 EOF
-oc rollout restart deployment/tekton-pipelines-controller -n $TEKTON_PIPELINES_NAMESPACE
+
+oc adm policy add-scc-to-group privileged system:serviceaccounts:$TARGET_NAMESPACE
+
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:$TARGET_NAMESPACE
 ```
 
-Note: change **`TEKTON_PIPELINES_NAMESPACE`** to the namespace where Tekton pipelines is installed on your cluster.
+## Next steps: secure the Kubeflow dashboard with HTTPS
+
+Follow the [official guide on kubeflow](https://www.kubeflow.org/docs/distributions/ibm/deploy/install-kubeflow-on-iks/#next-steps-secure-the-kubeflow-dashboard-with-https) for setting up https
+
+## Troubleshooting
+
+* If pods are not starting up. Check the logs. There might be some issues with scc permissions. 
+
+* If you are on OpenShift 4.7 we are not done testing on that platform yet. So there might be some issues there. 
+
