@@ -49,5 +49,6 @@ Date: **Day Two**
 |Distributed Training and HPO Deep Dive |Andrew, Kevin, Animesh|[Slides](https://www.slideshare.net/AnimeshSingh/kubeflow-distributed-training-and-hpo)<br>[Video](https://www.youtube.com/watch?v=KJFOlhD3L1E&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=5)<br>[中文视频](https://www.bilibili.com/video/BV19Z4y13788)|
 |Kubeflow PR workflow|Weiqiang|[Slides](Presentations/PRworkflow.pdf)<br>[Video](https://youtu.be/4EBQkfbbUTM)|
 |PR workflow handson||[PR workflow](HandsOn/PRworkflow/PRworkflow.md)<br>[Video](https://www.youtube.com/watch?v=glTvpq6hu5w&list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl&index=6)|
+|Upgrading Kubeflow||[Readme (KF 1.2 to 1.3)](HandsOn/upgrade/KF_upgrade_1_2_to_1_3.md)<br>
 
 **Recordings for live sessions:** [Kubeflow Dojo Day Two Playlist](https://www.youtube.com/playlist?list=PLmzRWLV1CK_zYzciXjUrK2IRi3sZzshNl)
