@@ -6,7 +6,7 @@ _Raw Technical Writeup_
 Prerequisites:
 - bash
 - kubectl, logged in to cluster
-- old KF 1.2 installation
+- old KF 1.2 multi-user installation
 - [KF 1.3 kfdef](https://github.com/kubeflow/manifests/blob/v1.3-branch/distributions/kfdef/kfctl_ibm_multi_user.v1.3.0.yaml)
 - kfctl 1.2.0
 - [kill-kube-ns](https://github.com/ctron/kill-kube-ns/blob/master/kill-kube-ns)
