@@ -1,5 +1,8 @@
 # Kubeflow Deployment on OpenShift Container Platform
 
+**Note:** This document is obsolete. For up-to-date deployment instructions, please check 
+[kubeflow.org](https://www.kubeflow.org/docs/distributions/openshift/install-kubeflow/).
+
   - [Deploy Kubeflow](#deploy-kubeflow)
     - [Deploy with `kfctl` CLI](#1-deploy-with-kfctl-cli)
     - [Deploy with the Kubeflow Operator](#2-deploy-with-the-kubeflow-operator)
