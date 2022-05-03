@@ -10,7 +10,7 @@ However, before anyone comes to the dojo materials and thinks to contribute, he 
 
 Most importantly, for anyone interesting in Kubeflow project the access to a Kuberenetes cluster is a must. The minimal cluster configuration for running most applications of Kubeflow is **8 vcpu, 16gb memory and at least 50gb of disk for docker registry**.
 
-**We recommend run Kubeflow on Kubernetes 1.16 release.** Although Kubeflow deployment has been tested with Kubernetes up to 1.18 release, there are known issues with certain applications on latest release.
+**We recommend run Kubeflow on Kubernetes 1.21 release.** Currently, Kubeflow is not compatible with Kubernetes 1.22.
 
 Note that during the live session for this dojo, few IBM Cloud Kubernetes clusters will be provided for hands on workshops. But the amount of the clusters is very limited and the clusters will be deleted once the workshop ends.
 
@@ -30,6 +30,6 @@ There are dozens of projects around **Kubeflow**, including some of the most act
 * [kfp-tekton](https://github.com/kubeflow/kfp-tekton) the pipeline compiler to transform a Kubeflow Pipeline DSL to Tekton yaml manifest
 * [katib](https://github.com/kubeflow/katib) the repository for hyperparameter tuning
 * [kfserving](https://github.com/kubeflow/kfserving) the serverless inferencing on Kubernetes
-* [kfctl](https://github.com/kubeflow/kfctl) the control plane to deploy and maintain Kubeflow
+* [kustomize](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0) (version 3.2.0) + kubectl to Kubeflow
 * [website](https://github.com/kubeflow/website) the document
 * and more

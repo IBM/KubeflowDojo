@@ -1,3 +1,6 @@
+**Note** Starting from Kubeflow v1.4, it only supports `kustomize` + `kubectl` approach for the deployment.
+`kfctl` is deprecated.
+
 * Prereq
 
   - [Kubernetes](https://w3.ibm.com/developer/docs/open-source/kubernetes/)
