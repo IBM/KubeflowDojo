@@ -13,7 +13,7 @@ Read about [IBM's journey with Kubeflow here](https://developer.ibm.com/blogs/ku
 
 **Day One** End to end presentation and walk through on Kubeflow, followed by detailed deep dive and hands on deploying Kubeflow to Minikube and/or IBM Cloud Kubernetes Service (IKS).
 
-**Day Two** Deeper dive sessions and demos on Kubeflow Pipelines, Kubeflow Serving (KFServing), Distributed Training Operators and HPO, and Kubeflow PR workflow
+**Day Two** Deeper dive sessions and demos on Kubeflow Pipelines, KServe, Distributed Training Operators and HPO, and Kubeflow PR workflow
 
 The Kubeflow Slack workspace is kubeflow.slack.com. To join, click this [invitation to Kubeflow Slack workspace](https://join.slack.com/t/kubeflow/shared_invite/zt-cpr020z4-PfcAue_2nw67~iIDy7maAQ). There is a channel **#kubeflow-dojo** created for the workshop.
 
