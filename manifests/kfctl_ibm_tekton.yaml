@@ -97,5 +97,5 @@ spec:
     name: tensorboard
   repos:
   - name: manifests
-    uri: https://github.com/adrian555/manifests/archive/dojo.tar.gz
+    uri: https://github.com/IBM/manifests/archive/master.tar.gz
   version: dojo
